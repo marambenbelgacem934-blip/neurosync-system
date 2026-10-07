@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ParkinsonCare – Tableau de bord</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--n:#0a1b4d;--bl:#1f63e8;--tx:#14224a;--mu:#6b7a9c;--bd:#e6ecf7;--pk:#ff4d6d;--gr:#17a673;--or:#ff9f1c}
+*{box-sizing:border-box;margin:0}
+body{font:13px/1.35 Inter,'Segoe UI',system-ui,sans-serif;color:var(--tx);background:#f3f6fc;display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+i[data-i]{display:inline-flex;width:20px;height:20px;flex:none}i svg{width:100%;height:100%}
+button{font:inherit;cursor:pointer;border:0;color:inherit}em,u{font-style:normal;text-decoration:none}
+/* ===== Barre latérale ===== */
+.sb{background:linear-gradient(180deg,#0b2160,#07133a);color:#fff;padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.logo{display:flex;gap:10px;align-items:center;margin-bottom:26px}.logo i{width:42px;height:42px;color:#cfe0ff}
+.logo b{font-size:20px;font-weight:700}.logo b span{font-weight:400;color:#bcd0ff}.logo small{display:block;font-size:11px;color:#a9bbe6;line-height:1.3}
+nav a,.foot a{display:flex;gap:14px;align-items:center;padding:12px 14px;border-radius:9px;color:#dbe6ff;font-weight:500;margin-bottom:4px;cursor:pointer;transition:.2s}
+nav a:hover,.foot a:hover{background:#ffffff14}nav a.on{background:var(--bl);color:#fff;box-shadow:0 6px 16px #1f63e855}
+#cvs{flex:1;min-height:0;width:100%}.tag{font-style:italic;color:#a9bbe6;margin:0 0 8px 6px}.wv{width:100%;height:24px;margin-bottom:14px}.foot a{font-size:12.5px;padding:9px 12px}
+/* ===== Zone principale ===== */
+main{padding:18px 22px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-content:start}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:14px}
+.av{width:56px;height:56px;border-radius:50%;background:#e4ecfb;display:grid;place-items:center;color:var(--n)}
+.hi{font-size:13px;font-weight:500}h1{font-size:24px;line-height:1.15;font-weight:700}.top p{color:var(--mu);font-size:12px}.sp{flex:1}
+.date{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:10px;padding:10px 12px;font-weight:500}.date i{width:18px;height:18px;color:var(--n)}
+.date select{border:0;background:none;font:inherit;appearance:none;outline:0;cursor:pointer;color:inherit}
+.bell{position:relative;background:#fff;border:1px solid var(--bd);border-radius:10px;width:44px;height:44px;display:grid;place-items:center;color:var(--n)}
+.bd{position:absolute;top:-6px;right:-6px;background:var(--pk);color:#fff;border-radius:9px;font-size:10px;font-weight:700;min-width:17px;height:17px;display:grid;place-items:center}
+.usr{display:flex;gap:10px;align-items:center;font-weight:600}.usr b{width:42px;height:42px;border-radius:50%;background:var(--bl);color:#fff;display:grid;place-items:center;font-size:13px}.usr i{width:16px}
+.col{display:grid;gap:14px;min-width:0;align-content:start}
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;box-shadow:0 4px 18px #1a3c8c0f;min-width:0}
+.card h3{display:flex;gap:10px;align-items:center;font-size:14px;font-weight:700;margin-bottom:10px}.card h3>i{color:var(--bl);width:22px}
+/* KPI */
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.k{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:center;padding:14px}
+.ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;grid-row:span 2}.ic i{width:26px;height:26px}
+.k>span{font-weight:600;font-size:12.5px;align-self:end}.k b{font-size:26px;font-weight:700;line-height:1.1}.k b small{font-size:.55em;font-weight:600}
+.d{grid-column:1/-1;font-size:11.5px;font-weight:600;display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:6px}.d u{color:var(--mu);font-weight:500}.up{color:var(--gr)}.dn{color:var(--pk)}
+.sk{width:52%;height:28px}.sk svg{width:100%;height:100%}.pc{width:30px;height:26px;border-radius:7px;background:#ffeccc;color:var(--or);display:grid;place-items:center}.pc i{width:16px;height:16px}
+/* Graphiques */
+.lg{display:flex;gap:18px;margin-left:auto;font-size:11px;color:var(--mu);font-weight:500;align-items:center}
+.lg span::before{content:'';display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:6px;background:var(--c);vertical-align:middle}
+.lg .pl::before{display:none}.lg .pl i{width:14px;height:14px;color:var(--gr);margin-right:4px;vertical-align:middle}
+.cw{position:relative}svg{display:block;width:100%;height:auto}svg .g{stroke:#e3eaf6}svg text{font-size:11px;fill:var(--mu)}svg .b1{fill:var(--bl)}svg .b2{fill:var(--pk)}svg .tv{fill:var(--tx);font-weight:600}
+.ln{fill:none;stroke:var(--bl);stroke-width:2.2;stroke-linejoin:round}.bar{transition:.2s}.bar:hover{filter:brightness(.92)}
+.tp{position:absolute;display:none;background:var(--n);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;pointer-events:none;transform:translateX(-50%);white-space:nowrap}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px;align-items:start}.stk{display:grid;gap:14px;min-width:0}
+table{width:100%;border-collapse:collapse;font-size:11.5px}th{background:#f2f5fb;color:var(--mu);font-weight:600;text-align:left;padding:7px 8px}th:first-child{padding-left:38px}
+td{padding:7px 8px;border-bottom:1px solid #eef2f9}.df{display:flex;gap:10px;align-items:center}.dot{width:20px;height:20px;border-radius:50%;background:var(--pk);color:#fff;display:grid;place-items:center}.dot i{width:12px;height:12px}
+.more{display:flex;gap:6px;align-items:center;margin:10px 0 0 auto;color:var(--bl);background:none;font-weight:600;font-size:12px}.more i{width:14px;height:14px}
+.cp{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cp>div{border:1px solid var(--bd);border-radius:8px;overflow:hidden;font-size:12px}.cp h4{padding:6px 12px;font-size:12px;margin-bottom:6px}
+.cp .a h4{background:#ffe5ec;color:#b3233f}.cp .z h4{background:#dff6ea;color:#0d7a53}.cp p{padding:0 12px;color:var(--mu)}.cp b{display:block;padding:0 12px 8px;font-size:21px}
+.ok{margin-top:12px;background:#dff6ea;color:#0d7a53;border-radius:8px;padding:9px 12px;display:flex;gap:10px;align-items:center;font-weight:500}.ok i{width:18px;height:18px}
+/* Panneau droit : tâches & alertes */
+.tk{padding:0;overflow:hidden}.fl{animation:fl 1.4s}@keyframes fl{50%{box-shadow:0 0 0 6px #1f63e844}}
+.th{background:linear-gradient(90deg,#0b2160,#143577);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}.th>i{width:20px}
+.th em{background:var(--pk);border-radius:9px;font-size:11px;min-width:18px;height:18px;display:grid;place-items:center}
+.th a{margin-left:auto;font-size:11.5px;font-weight:600;display:flex;gap:6px;align-items:center;cursor:pointer}.th a i{width:14px;height:14px}
+.ti{display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;padding:12px 16px;border-bottom:1px solid #eef2f9;cursor:pointer;transition:background .2s}.ti:hover{background:#f4f8ff}
+.ti .c{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;grid-row:span 2}.ti .c i{width:18px;height:18px}
+.ti b{font-size:12.5px}.ti small{color:var(--mu);font-size:11px;grid-column:2}.ti .st{font-size:10.5px;font-weight:600;display:flex;gap:4px;align-items:center;justify-content:flex-end}.ti .st i{width:12px;height:12px}
+.ti .w{grid-column:3;text-align:right;color:var(--mu);font-size:10.5px}
+.done .c{background:var(--bl)}.done .st{color:var(--gr)}.soon .c{background:var(--or)}.soon .st{color:#e08600}.alert .c{background:var(--pk)}.alert .st{color:var(--pk)}.seen .c{background:#9aa8c7}.seen .st{color:var(--mu)}
+.nr p{color:var(--mu);font-size:12px;margin:0 0 12px 32px}.pr{display:flex;gap:12px;align-items:center;color:var(--n)}.pr>i{width:22px}
+.pb{height:8px;background:#e3eaf6;border-radius:5px;overflow:hidden;flex:1}.pb i{display:block;height:100%;width:0;background:var(--bl);border-radius:5px;transition:width 1.4s}.nr small{color:var(--mu);font-size:11px}
+.c3{position:relative;overflow:hidden;min-height:210px;background:linear-gradient(100deg,#e3edff 0%,#b9d0f6 40%,#2c58b4 68%,#0e2a70 100%);border:0}
+.c3 h3{font-size:15px;margin-bottom:6px}.c3 .tx{position:relative;z-index:1;width:50%}.c3 p{font-size:11.5px;color:#2a3d6e}.c3 canvas{position:absolute;right:0;top:0;width:52%;height:100%}
+.bt{display:inline-flex;gap:8px;align-items:center;justify-content:center;background:var(--n);color:#fff;border-radius:8px;padding:10px 14px;font-weight:600;margin-top:12px}.bt i{width:14px;height:14px}
+.ex{background:linear-gradient(135deg,#0b2160,#07133a);color:#fff;border:0}.ex h3>i{color:#fff}.ex p{font-size:11.5px;color:#c6d4f5;margin-bottom:4px}.ex .bt{display:flex;background:#fff;color:var(--n);width:100%}
+footer{grid-column:1/-1;text-align:center;font-size:10.5px;color:var(--mu);padding:4px}
+/* Toast & modale 3D */
+.ts{position:fixed;right:22px;bottom:22px;background:var(--n);color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 10px 30px #0a1b4d55;display:flex;gap:10px;align-items:center;transform:translateY(30px);opacity:0;pointer-events:none;transition:.35s;z-index:40;max-width:340px}.ts.on{transform:none;opacity:1}
+.md{position:fixed;inset:0;background:#050d2acc;display:none;place-items:center;z-index:30;padding:20px}.md.on{display:grid}
+.mb{background:linear-gradient(135deg,#0b1f55,#050f33);border-radius:18px;width:min(960px,100%);height:min(560px,90vh);display:grid;grid-template-columns:1fr 280px;overflow:hidden;color:#fff;position:relative}
+.mb canvas{width:100%;height:100%}.mi{padding:26px 22px;background:#ffffff0d;overflow:auto}.mi h3{font-size:16px;margin-bottom:8px}.mi p{color:#b9c9ee;font-size:12px}.mi label{display:block;margin:14px 0 4px;font-size:12px;color:#b9c9ee}.mi input{width:100%}.mb .bt{background:var(--bl);margin-top:6px}
+.zn{list-style:none;padding:0;margin:14px 0;display:grid;gap:10px;font-size:12.5px}.zn li::before{content:'';display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);margin-right:10px}
+.x{position:absolute;top:12px;right:14px;background:#ffffff1f;width:32px;height:32px;border-radius:50%;z-index:2}
+[hidden]{display:none!important}
+.bt.sm{margin:0;padding:6px 12px;font-size:12px}
+.lg input,.lg select,.fm input,.pf input,textarea{border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font:inherit;color:var(--tx);background:#fff;min-width:0}
+.fm{display:flex;gap:10px;flex-wrap:wrap}.fm input{flex:1 1 140px}.pf{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.pf label{display:grid;gap:4px;font-size:11.5px;color:var(--mu);font-weight:600}.pf input:disabled{background:#f6f8fd;color:var(--tx)}
+textarea{width:100%;min-height:100px;resize:vertical}.dot.m{background:var(--gr)}#v-trt th:first-child{padding-left:8px}
+.chip{padding:3px 9px;border-radius:9px;font-size:11px;font-weight:600;background:#eef2f9}.chip.done{background:#dff6ea;color:#0d7a53}.chip.soon{background:#fff0d6;color:#b86e00}
+@media print{body.vr .right,body.vr .lg{display:none!important}}
+/* ===== Espace médecin : patients ===== */
+nav .nl{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7f95c9;margin:16px 0 6px 14px}
+body.vp main{grid-template-columns:minmax(0,1fr)}body.vp .right{display:none}
+.ptsh{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-radius:14px;padding:20px 22px;color:#fff;background:linear-gradient(110deg,#0b2160,#1f63e8)}
+.ptsh h2{font-size:19px}.ptsh p{color:#cfe0ff;font-size:12px;margin-top:2px}.ptsh .bt{margin:0 0 0 auto;background:#fff;color:var(--n)}
+.srch{position:relative}.srch i{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--mu)}.srch input{padding-left:30px!important}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.pcd{border:1px solid var(--bd);border-radius:14px;padding:14px;display:grid;gap:12px;background:#fff;transition:.2s}.pcd:hover{box-shadow:0 8px 22px #1a3c8c1f;transform:translateY(-2px)}
+.pch{display:flex;gap:10px;align-items:center}.pav{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;flex:none}
+.pin{min-width:0;flex:1}.pin b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pin small{color:var(--mu);font-size:11px}
+.pms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#f5f8fe;border-radius:10px;padding:8px 10px}.pms small{display:block;color:var(--mu);font-size:10px}.pms b{font-size:14px}
+.pcf{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--mu);font-size:11.5px}.pcf span:last-child{display:flex;gap:6px;align-items:center}.pcf i{width:14px;height:14px}
+.dl{width:32px;height:32px;border-radius:8px;background:#fff0f3;color:var(--pk);display:grid;place-items:center;transition:.2s;flex:none}.dl:hover{background:var(--pk);color:#fff}.dl i{width:16px;height:16px}
+.chip.stb{background:#dff6ea;color:#0d7a53}.chip.sur{background:#fff0d6;color:#b86e00}.chip.ale{background:#ffe3ea;color:#c0264a}.chip.nou{background:#e5efff;color:#1f63e8}
+.pem{grid-column:1/-1;text-align:center;color:var(--mu);display:grid;justify-items:center;gap:6px;padding:30px}.pem>i{width:40px;height:40px;color:#b9c6e4}.pem b{color:var(--tx)}
+.ptm{position:fixed;inset:0;background:#050d2acc;display:grid;place-items:center;z-index:35;padding:20px}
+.ptb{background:#fff;border-radius:18px;width:min(540px,100%);padding:26px;position:relative;box-shadow:0 30px 80px #0008;animation:pop .25s}@keyframes pop{from{transform:scale(.94);opacity:0}}
+.ptb h3{display:flex;gap:10px;align-items:center;font-size:17px;margin-bottom:4px}.ptb h3 i{color:var(--bl)}.ptb .sub{color:var(--mu);font-size:12px;margin-bottom:16px}
+.ptb .fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}.ptb label{display:grid;gap:4px;font-size:11.5px;color:var(--mu);font-weight:600}.ptb .w{grid-column:1/-1}
+.ptb input,.ptb select{border:1px solid var(--bd);border-radius:8px;padding:9px 10px;font:inherit;color:var(--tx);background:#fff;min-width:0}.ptb input:focus,.ptb select:focus{outline:2px solid #1f63e855;border-color:var(--bl)}
+.ptf{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}.ptf .bt{margin:0}.bt.gh{background:#eef2f9;color:var(--tx)}.bt.dg{background:var(--pk)}.bt.bl{background:var(--bl)}
+.x2{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:#eef2f9}
+.ptb.cf{text-align:center;width:min(400px,100%)}.ptb.cf .ci{width:56px;height:56px;border-radius:50%;background:#ffe3ea;color:var(--pk);display:grid;place-items:center;margin:0 auto 12px}.ptb.cf .ci i{width:26px;height:26px}
+.ptb.cf h3 i{color:var(--pk)}.ptb.cf p{color:var(--mu);margin-top:6px}.ptb.cf .ptf{justify-content:center}
+@media(max-width:520px){.ptb .fg{grid-template-columns:1fr}}
+@media(max-width:1280px){main{grid-template-columns:1fr}.right{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}}
+@media(max-width:1000px){.g2{grid-template-columns:1fr}.mb{grid-template-columns:1fr;grid-template-rows:1fr auto}}
+@media(max-width:860px){body{display:block}.sb{position:static;height:auto;padding:14px}#cvs,.tag,.wv{display:none}nav,.foot{display:flex;flex-wrap:wrap;gap:4px}.logo{margin-bottom:12px}.top{flex-wrap:wrap}}
+@media print{.sb,.c3,.ex,.bell,.ts,.md{display:none!important}body,main{display:block;background:#fff}.card{break-inside:avoid;margin-bottom:10px}}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f7bff" stop-opacity=".28"/><stop offset="1" stop-color="#2f7bff" stop-opacity="0"/></linearGradient>
+<linearGradient id="gp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b87"/><stop offset="1" stop-color="#ffb3c1"/></linearGradient></defs></svg>
+
+<div class="sb">
+ <div class="logo"><i data-i="brain"></i><div><b>Parkinson<span>Care</span></b><small>Suivi ambulatoire<br>Meilleur demain</small></div></div>
+ <nav><a class="on"><i data-i="home"></i>Tableau de bord</a><a data-v="hist"><i data-i="clock"></i>Historique</a><a data-v="trt"><i data-i="pill"></i>Traitement</a><a data-v="rep"><i data-i="file"></i>Rapport médecin</a><a data-v="pro"><i data-i="user"></i>Profil patient</a><small class="nl">Espace médecin</small><a data-v="pts"><i data-i="users"></i>Patients</a></nav>
+ <canvas id="cvs"></canvas>
+ <p class="tag">Technologie au service<br>de votre mobilité</p>
+ <svg class="wv" viewBox="0 0 200 30"><path d="M0 15q10-12 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0" fill="none" stroke="#4d9bff" stroke-width="1.5"/></svg>
+ <div class="foot"><a data-m><i data-i="gear"></i>Paramètres</a><a data-m><i data-i="power"></i>Déconnexion</a></div>
+</div>
+
+<main>
+<div class="top">
+ <div class="av"><i data-i="user" style="width:30px;height:30px"></i></div>
+ <div><span class="hi">Bonjour,</span><h1>Ahmed Ben Ali</h1><p>Patient ID : PK-00123 &nbsp;|&nbsp; Suivi depuis le 01/10/2026</p></div>
+ <div class="sp"></div>
+ <label class="date"><i data-i="cal"></i><select id="rg"><option>01/10/2026 - 07/10/2026</option><option>24/09/2026 - 30/09/2026</option></select><i data-i="chev"></i></label>
+ <button class="bell" id="bl" aria-label="Notifications"><i data-i="bell"></i><span class="bd nb">3</span></button>
+ <div class="usr"><b>AA</b>Ahmed<i data-i="chev"></i></div>
+</div>
+
+<div class="col" id="v-dash">
+ <section class="kp">
+  <div class="card k"><div class="ic" style="background:#e5efff;color:#2f7bff"><i data-i="steps"></i></div><span>Nombre de pas</span><b><span class="n" data-n="4826">0</span></b>
+   <div class="d"><em class="up">↑ 12 % <u>vs. hier</u></em><div class="sk" data-s="20,24,22,30,28,36,34,42,40,48" data-c="#2f7bff"></div></div></div>
+  <div class="card k"><div class="ic" style="background:#ffe3ea;color:var(--pk)"><i data-i="snow"></i></div><span>Épisodes FOG</span><b><span class="n" data-n="7">0</span></b>
+   <div class="d"><em class="dn">↓ 30 % <u>vs. hier</u></em><div class="sk" data-s="9,8,9,7,8,6,7,5,6,4" data-c="#ff4d6d"></div></div></div>
+  <div class="card k"><div class="ic" style="background:#efe6ff;color:#8a4dff"><i data-i="timer"></i></div><span>Durée totale FOG</span><b><span class="n" data-n="42">0</span> <small>s</small></b>
+   <div class="d"><em class="dn">↓ 45 % <u>vs. hier</u></em><div class="sk" data-s="10,14,9,11,8,9,6,7,5,6" data-c="#8a4dff"></div></div></div>
+  <div class="card k"><div class="ic" style="background:#dff6ea;color:var(--gr)"><i data-i="gauge"></i></div><span>Cadence moyenne</span><b><span class="n" data-n="96">0</span> <small>SPM</small></b>
+   <div class="d"><em class="up">↑ 8 % <u>vs. hier</u></em><div class="sk" data-s="80,84,82,90,88,94,92,98,96,102" data-c="#17a673"></div></div></div>
+  <div class="card k"><div class="ic" style="background:#ffeccc;color:var(--or)"><i data-i="pill"></i></div><span>Dernière dose</span><b style="color:var(--or)"><span class="n" id="dm" data-n="100">0</span> <small>mg</small></b>
+   <div class="d"><em id="dh">à 08:00</em><div class="pc"><i data-i="pill"></i></div></div></div>
+ </section>
+
+ <section class="card"><h3><i data-i="trend"></i>Cadence &amp; Épisodes FOG au cours de la journée
+  <div class="lg"><span style="--c:#1f63e8">Cadence (SPM)</span><span style="--c:#ff4d6d">FOG (épisodes)</span><span class="pl"><i data-i="pill"></i>Prise de médicament</span></div></h3>
+  <div class="cw"><svg id="mc" viewBox="0 0 900 272"></svg><div class="tp" id="tip"></div></div></section>
+
+ <div class="g2">
+  <div class="stk">
+   <section class="card"><h3><i data-i="bars"></i>Nombre d’épisodes FOG par jour</h3><svg id="bars" viewBox="0 0 420 170"></svg></section>
+   <section class="card"><h3><i data-i="list"></i>Détail des épisodes FOG</h3>
+    <table><thead><tr><th>Date</th><th>Heure</th><th>Durée</th><th>Cadence (SPM)</th><th>Dose (mg)</th></tr></thead><tbody id="fb"></tbody></table>
+    <button class="more" id="vf"><span>Voir tout</span><i data-i="arrow"></i></button></section>
+  </div>
+  <div class="stk">
+   <section class="card"><h3><i data-i="clock"></i>Comparaison avant / après prise du médicament</h3>
+    <div class="cp"><div class="a"><h4>Avant prise</h4><p>Cadence moyenne</p><b>82 SPM</b><p>FOG (épisodes)</p><b>4</b></div>
+    <div class="z"><h4>Après prise</h4><p>Cadence moyenne</p><b>108 SPM</b><p>FOG (épisodes)</p><b>1</b></div></div>
+    <div class="ok"><i data-i="trend"></i>Amélioration de la cadence et réduction des épisodes FOG</div></section>
+   <section class="card"><h3><i data-i="cal"></i>Évolution sur la semaine
+    <div class="lg"><span style="--c:#1f63e8">Cadence (SPM)</span><span style="--c:#ff4d6d">FOG (épisodes)</span></div></h3>
+    <svg id="wk" viewBox="0 0 560 160"></svg></section>
+  </div>
+ </div>
+</div>
+
+<div class="col" id="v-hist" hidden>
+ <section class="card"><h3><i data-i="clock"></i>Historique<div class="lg"><input id="hq" placeholder="Rechercher…"><select id="hf"><option value="">Tous les types</option><option value="FOG">Épisodes FOG</option><option value="Médicament">Prises de médicament</option></select><button class="bt sm" id="hx"><i data-i="down"></i>CSV</button></div></h3>
+  <table><thead><tr><th>Date</th><th>Heure</th><th>Type</th><th>Détail</th></tr></thead><tbody id="hb"></tbody></table><small id="hc" style="color:var(--mu)"></small></section></div>
+<div class="col" id="v-trt" hidden>
+ <section class="card"><h3><i data-i="pill"></i>Traitement du jour<div class="lg" id="ob"></div></h3><div class="pr" style="margin-bottom:12px"><div class="pb"><i id="obb"></i></div></div>
+  <table><thead><tr><th>Heure</th><th>Médicament</th><th>Statut</th><th></th></tr></thead><tbody id="tb"></tbody></table></section>
+ <section class="card"><h3><i data-i="list"></i>Ajouter une prise</h3><div class="fm"><input id="tn" placeholder="Médicament"><input id="tg" type="number" min="1" placeholder="Dose (mg)"><input id="tt" type="time" value="20:00"><button class="bt sm" id="ta">Ajouter</button></div></section></div>
+<div class="col" id="v-rep" hidden>
+ <section class="card"><h3><i data-i="file"></i>Rapport médecin<div class="lg"><button class="bt sm" id="rpc">Copier le résumé</button><button class="bt sm" id="rpp"><i data-i="down"></i>Imprimer / PDF</button></div></h3>
+  <p id="rn" style="color:var(--mu);margin-bottom:10px"></p><table><tbody id="rk"></tbody></table></section>
+ <section class="card"><h3><i data-i="cal"></i>Évolution sur la semaine</h3><svg id="rwk" viewBox="0 0 560 160"></svg></section>
+ <section class="card"><h3><i data-i="list"></i>Notes pour le médecin</h3><textarea id="rnt" placeholder="Symptômes observés, questions, effets secondaires…"></textarea></section></div>
+<div class="col" id="v-pro" hidden>
+ <section class="card"><h3><i data-i="user"></i>Profil patient<div class="lg"><button class="bt sm" id="pe">Modifier</button></div></h3>
+  <div class="df" style="margin-bottom:14px"><div class="av" style="width:64px;height:64px"><i data-i="user" style="width:34px;height:34px"></i></div><div><b id="pn" style="font-size:18px"></b><br><span id="pi" style="color:var(--mu)"></span></div></div><div class="pf" id="pf"></div></section>
+ <section class="card"><h3><i data-i="gauge"></i>Objectifs de suivi</h3><div id="og"></div></section></div>
+<div class="col" id="v-pts" hidden>
+ <section class="ptsh"><div><h2>Mes patients</h2><p id="pdr"></p></div><button class="bt padd"><i data-i="plus"></i>Ajouter un patient</button></section>
+ <section class="kp" id="pst"></section>
+ <section class="card"><h3><i data-i="users"></i>Liste des patients
+  <div class="lg"><div class="srch"><i data-i="search"></i><input id="psq" placeholder="Rechercher un patient…"></div><select id="psf"><option value="">Tous les statuts</option><option>Stable</option><option>À surveiller</option><option>Alerte</option><option>Nouveau</option></select></div></h3>
+  <div class="pgrid" id="pgd"></div></section></div>
+<div class="col right">
+ <section class="card tk"><div class="th"><i data-i="trend"></i>Tâches &amp; Alertes<em class="nb">3</em><a id="va"><span>Voir tout</span><i data-i="arrow"></i></a></div><div id="tl"></div></section>
+ <section class="card nr"><h3><i data-i="cal"></i>Prochain rapport médecin</h3>
+  <p>Le rapport sera généré automatiquement<br>à la fin de la période prescrite.</p>
+  <div class="pr"><div class="pb"><i></i></div><i data-i="cal"></i></div><small>6 / 7 jours</small></section>
+ <section class="card c3"><div class="tx"><h3>Modèle 3D animé</h3><p>Visualisez les zones affectées et suivez l’évolution des symptômes en temps réel.</p>
+  <button class="bt" id="b3">Voir le modèle 3D<i data-i="arrow"></i></button></div><canvas id="cv3"></canvas></section>
+ <section class="card ex"><h3><i data-i="down"></i>Exporter le rapport</h3><p>Télécharger toutes les données au format PDF</p>
+  <button class="bt" id="gx"><i data-i="down"></i>Générer le rapport</button></section>
+</div>
+<footer>ParkinsonCare © 2026 &nbsp;|&nbsp; Données sécurisées et confidentielles</footer>
+</main>
+
+<div class="ptm" id="pma" hidden><div class="ptb"><button class="x2" data-c aria-label="Fermer">✕</button>
+ <h3><i data-i="plus"></i>Ajouter un patient</h3><p class="sub">Identifiant attribué automatiquement : <b id="pid"></b></p>
+ <div class="fg"><label class="w">Nom complet *<input id="pnm" placeholder="Prénom Nom" autocomplete="off"></label>
+  <label>Date de naissance *<input id="pdn" type="date"></label><label>Sexe<select id="psx"><option>Homme</option><option>Femme</option></select></label>
+  <label>Stade (Hoehn &amp; Yahr)<select id="pst2"><option>1</option><option>1,5</option><option selected>2</option><option>2,5</option><option>3</option><option>4</option><option>5</option></select></label>
+  <label>Téléphone<input id="ptl" type="tel" placeholder="+216 …"></label></div>
+ <div class="ptf"><button class="bt gh" data-c>Annuler</button><button class="bt bl" id="psv"><i data-i="check"></i>Enregistrer le patient</button></div></div></div>
+<div class="ptm" id="pmd" hidden><div class="ptb cf"><div class="ci"><i data-i="trash"></i></div><h3 style="justify-content:center">Supprimer ce patient ?</h3><p id="pdt"></p>
+ <div class="ptf"><button class="bt gh" data-c>Annuler</button><button class="bt dg" id="pdl"><i data-i="trash"></i>Supprimer</button></div></div></div>
+<div class="ts" id="ts"><i data-i="bell"></i><span></span></div>
+<div class="md" id="md"><div class="mb"><button class="x" id="mx" aria-label="Fermer">✕</button><canvas id="cvm"></canvas>
+ <div class="mi"><h3>Modèle 3D – Analyse de la marche</h3><p>Zones surveillées par les capteurs. Les points lumineux pulsent selon l’activité des symptômes.</p>
+  <ul class="zn"><li style="--c:#ff9a2e">Genou gauche : épisodes de FOG</li><li style="--c:#ff9a2e">Genou droit : rigidité modérée</li><li style="--c:#ffc13d">Hanche gauche : cadence réduite avant prise</li></ul>
+  <button class="bt" id="pp">Pause</button><label>Vitesse de marche</label><input id="sv" type="range" min=".3" max="2" step=".1" value="1">
+  <p style="margin-top:14px">Glissez sur le modèle pour le faire pivoter.</p></div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const I={home:'<path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+pill:'<path d="M10.5 20.5l-7-7a4.9 4.9 0 0 1 7-7l7 7a4.9 4.9 0 0 1-7 7z"/><path d="M8.5 8.5l7 7"/>',file:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h6"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+power:'<path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/>',steps:'<ellipse cx="8" cy="9" rx="3" ry="5"/><ellipse cx="16" cy="15" rx="3" ry="5"/>',
+snow:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/>',timer:'<circle cx="12" cy="14" r="8"/><path d="M12 14V9M9 2h6M12 2v4"/>',
+gauge:'<path d="M4 18a9 9 0 1 1 16 0"/><path d="M12 15l4-5"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>',check:'<path d="M5 12l5 5 9-10"/>',chev:'<path d="M6 9l6 6 6-6"/>',
+arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',bars:'<path d="M5 20V10M12 20V4M19 20v-7"/>',list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+down:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',alert:'<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>',
+brain:'<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 3 3 3 0 0 0 1 4 3 3 0 0 0 4 4h1V4zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 3 3 3 0 0 1-1 4 3 3 0 0 1-4 4h-1V4z"/>'};
+const icons=()=>$$('i[data-i]').forEach(e=>{if(!e.firstChild)e.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[e.dataset.i]}</svg>`});
+let tm;const toast=m=>{const t=$('#ts');t.querySelector('span').textContent=m;t.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),4500)};
+const fmt=h=>String(h|0).padStart(2,'0')+':'+String(Math.round(h%1*60)).padStart(2,'0');
+
+/* ===== Données (démo) ===== */
+const day=['01/10','02/10','03/10','04/10','05/10','06/10','07/10'],fog=[9,7,6,4,3,5,7],cad=[82,90,96,97,101,110,116];
+
+/* ===== Tâches & alertes (barre de droite) ===== */
+const T=[
+{t:'Prise de médicament',d:'08:00 - Levodopa/Carbidopa (100 mg)',s:'done',l:'Terminée',i:'check',mg:100,h:'08:00'},
+{t:'Prise de médicament',d:'12:00 - Entacapone (200 mg)',s:'soon',l:'À venir',w:'dans 2 h',i:'check',mg:200,h:'12:00'},
+{t:'Épisode FOG détecté',d:'14:32 - Durée : 6 s | Cadence : 84 SPM',s:'alert',l:'Aujourd’hui',i:'snow'},
+{t:'Prise de médicament',d:'18:00 - Levodopa/Carbidopa (100 mg)',s:'soon',l:'À venir',w:'dans 8 h',i:'check',mg:100,h:'18:00'}],
+X=[{t:'Rapport médecin',d:'Génération automatique - 08/10/2026',s:'soon',l:'À venir',w:'demain',i:'file'},
+{t:'Séance de marche guidée',d:'17:00 - 20 min avec repères sonores',s:'soon',l:'À venir',w:'dans 7 h',i:'steps'}];
+let all=0;const cur=()=>all?T.concat(X):T;
+function rt(){const L=cur();
+ $('#tl').innerHTML=L.map((x,k)=>`<div class="ti ${x.s}" data-k="${k}"><div class="c"><i data-i="${x.i}"></i></div><b>${x.t}</b><span class="st"><i data-i="${{alert:'alert',done:'check'}[x.s]||'clock'}"></i>${x.l}</span><small>${x.d}</small><span class="w">${x.w||''}</span></div>`).join('');
+ const n=L.filter(x=>x.s=='soon'||x.s=='alert').length;$$('.nb').forEach(e=>{e.textContent=n;e.style.display=n?'grid':'none'});icons()}
+$('#tl').onclick=e=>{const r=e.target.closest('.ti');if(!r)return;const x=cur()[+r.dataset.k];
+ if(x.s=='soon'){x.s='done';x.l='Terminée';x.w='';toast(x.t+' validée : '+x.d);if(x.mg){$('#dm').textContent=x.mg;$('#dh').textContent='à '+x.h}}
+ else if(x.s=='alert'){x.s='seen';x.l='Vu';toast('Épisode FOG marqué comme vu')}rt()};
+$('#va').onclick=()=>{all=!all;$('#va span').textContent=all?'Réduire':'Voir tout';rt()};
+$('#bl').onclick=()=>{const k=$('.tk');k.scrollIntoView({behavior:'smooth',block:'center'});k.classList.add('fl');setTimeout(()=>k.classList.remove('fl'),1500);toast('Vous avez '+$('.th .nb').textContent+' tâche(s) ou alerte(s) en attente')};
+
+/* ===== Tableau FOG ===== */
+const F=[['01/10/2026','09:24','8 s',72],['01/10/2026','11:47','12 s',68],['02/10/2026','14:32','6 s',84],['03/10/2026','16:18','10 s',76],['05/10/2026','10:03','7 s',80]],
+F2=[['06/10/2026','08:41','9 s',70],['06/10/2026','15:09','5 s',78],['07/10/2026','14:32','6 s',84]];let fa=0;
+const rf=()=>{$('#fb').innerHTML=(fa?F.concat(F2):F).map(r=>`<tr><td><div class="df"><span class="dot"><i data-i="snow"></i></span>${r[0]}</div></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>100</td></tr>`).join('');icons()};
+$('#vf').onclick=()=>{fa=!fa;$('#vf span').textContent=fa?'Réduire':'Voir tout';rf()};
+
+/* ===== Mini-courbes des KPI ===== */
+$$('.sk').forEach(e=>{const d=e.dataset.s.split(',').map(Number),c=e.dataset.c,a=Math.min(...d),z=Math.max(...d),
+ p=d.map((v,i)=>(i?'L':'M')+(i*140/(d.length-1)).toFixed(1)+' '+(30-(v-a)/(z-a)*28).toFixed(1)).join('');
+ e.innerHTML=`<svg viewBox="0 0 140 32" preserveAspectRatio="none"><path d="${p}L140 32L0 32Z" fill="${c}" opacity=".12"/><path d="${p}" fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`});
+
+/* ===== Graphique principal : cadence + FOG + prises ===== */
+(()=>{const W=900,l=48,r=852,t=14,b=222,x=h=>l+(h-8)/14*(r-l),yl=v=>b-(v-60)/80*(b-t),yr=v=>b-v/4*(b-t),
+cd=[...Array(57)].map((_,i)=>Math.max(62,Math.min(134,100+9*Math.sin(i/2.4)+6*Math.sin(i*1.35)-34*Math.exp(-((i-22)**2)/3)-14*Math.exp(-((i-38)**2)/4)))),
+ev=[[8.6,1],[10.4,1],[12.2,1],[14.5,2],[16.2,1],[18.4,1]],ds=[8,12,18];let s='';
+[60,80,100,120,140].forEach(v=>s+=`<line class="g" x1="${l}" x2="${r}" y1="${yl(v)}" y2="${yl(v)}"/><text class="b1" x="${l-8}" y="${yl(v)+4}" text-anchor="end">${v}</text>`);
+[0,1,2,3,4].forEach(v=>s+=`<text class="b2" x="${r+8}" y="${yr(v)+4}">${v}</text>`);
+for(let h=8;h<=20;h+=2)s+=`<text x="${x(h)}" y="${b+42}" text-anchor="middle">${fmt(h)}</text>`;
+s+=`<text class="b1" transform="translate(11 ${(t+b)/2}) rotate(-90)" text-anchor="middle">Cadence (SPM)</text><text class="b2" transform="translate(${W-6} ${(t+b)/2}) rotate(90)" text-anchor="middle">Nombre d’épisodes FOG</text>`;
+const p=cd.map((v,i)=>(i?'L':'M')+x(8+i/4).toFixed(1)+' '+yl(v).toFixed(1)).join('');
+s+=`<path d="${p}L${r} ${b}L${l} ${b}Z" fill="url(#gb)"/><path class="ln" d="${p}"/>`;
+ev.forEach(([h,n])=>s+=`<rect class="bar" x="${x(h)-5}" y="${yr(n)}" width="10" height="${b-yr(n)}" rx="3" fill="url(#gp)"><title>${fmt(h)} : ${n} épisode(s) FOG</title></rect>`);
+ds.forEach(h=>s+=`<line x1="${x(h)}" x2="${x(h)}" y1="${t}" y2="${b+4}" stroke="#17a673" stroke-dasharray="3 4" opacity=".4"/><g transform="translate(${x(h)} ${b+22}) rotate(-40)"><rect x="-8" y="-4" width="16" height="8" rx="4" fill="#fff" stroke="#17a673" stroke-width="1.8"/><path d="M0-4v8" stroke="#17a673" stroke-width="1.8"/><title>Prise de médicament à ${fmt(h)}</title></g>`);
+const sv=$('#mc'),tp=$('#tip');sv.innerHTML=s;
+sv.onmousemove=e=>{const bb=sv.getBoundingClientRect(),k=Math.round(((e.clientX-bb.left)/bb.width*W-l)/(r-l)*56);if(k<0||k>56)return tp.style.display='none';
+ tp.style.cssText=`display:block;left:${e.clientX-bb.left}px;top:${e.clientY-bb.top-34}px`;tp.textContent=fmt(8+k/4)+' · '+Math.round(cd[k])+' SPM'};sv.onmouseleave=()=>tp.style.display='none'})();
+
+/* ===== Épisodes FOG par jour ===== */
+(()=>{const l=30,r=410,t=16,b=140,bw=(r-l)/7,y=v=>b-v/10*(b-t);let s='';
+[0,2,4,6,8,10].forEach(v=>s+=`<line class="g" x1="${l}" x2="${r}" y1="${y(v)}" y2="${y(v)}"/><text x="${l-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`);
+fog.forEach((v,i)=>{const c=l+bw*(i+.5);s+=`<rect class="bar" x="${c-17}" y="${y(v)}" width="34" height="${b-y(v)}" rx="4" fill="url(#gp)"><title>${day[i]} : ${v} épisodes</title></rect><text class="tv" x="${c}" y="${y(v)-5}" text-anchor="middle">${v}</text><text x="${c}" y="${b+18}" text-anchor="middle">${day[i]}</text>`});
+$('#bars').innerHTML=s})();
+
+/* ===== Évolution sur la semaine ===== */
+(()=>{const l=40,r=530,t=10,b=135,x=i=>l+(r-l)*(i+.5)/7,yl=v=>b-(v-60)/80*(b-t),yr=v=>b-v/10*(b-t);let s='';
+[60,80,100,120,140].forEach(v=>s+=`<line class="g" x1="${l}" x2="${r}" y1="${yl(v)}" y2="${yl(v)}"/><text class="b1" x="${l-8}" y="${yl(v)+4}" text-anchor="end">${v}</text>`);
+[0,2,4,6,8,10].forEach(v=>s+=`<text class="b2" x="${r+8}" y="${yr(v)+4}">${v}</text>`);
+const pa=(d,f)=>d.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+f(v).toFixed(1)).join(''),pc=pa(cad,yl);
+s+=`<path d="${pc}L${x(6)} ${b}L${x(0)} ${b}Z" fill="url(#gb)"/><path class="ln" d="${pc}"/><path class="ln" style="stroke:var(--pk)" d="${pa(fog,yr)}"/>`;
+day.forEach((d,i)=>s+=`<text x="${x(i)}" y="${b+20}" text-anchor="middle">${d}</text><circle cx="${x(i)}" cy="${yl(cad[i])}" r="3.5" fill="#fff" stroke="#1f63e8" stroke-width="2"><title>${d} : ${cad[i]} SPM</title></circle><circle cx="${x(i)}" cy="${yr(fog[i])}" r="3.5" fill="#fff" stroke="#ff4d6d" stroke-width="2"><title>${d} : ${fog[i]} épisodes</title></circle>`);
+$('#wk').innerHTML=s})();
+
+/* ===== Modèle 3D (Three.js) : silhouette qui marche, zones affectées pulsantes ===== */
+function mk(cv,o){if(!window.THREE)return;const T3=THREE,R=new T3.WebGLRenderer({canvas:cv,alpha:true,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+ const S=new T3.Scene(),C=new T3.PerspectiveCamera(30,1,.1,60);C.position.set(0,2.6,10);C.lookAt(0,-.15,0);
+ const bm=new T3.ShaderMaterial({transparent:true,depthWrite:false,
+  vertexShader:'varying vec3 n,v;void main(){n=normalize(normalMatrix*normal);vec4 m=modelViewMatrix*vec4(position,1.);v=-m.xyz;gl_Position=projectionMatrix*m;}',
+  fragmentShader:'varying vec3 n,v;void main(){vec3 N=normalize(n);float f=pow(1.-abs(dot(N,normalize(v))),2.4),d=max(dot(N,normalize(vec3(.4,.6,.7))),0.);gl_FragColor=vec4(vec3(.05,.27,.86)*(.5+.8*d)+vec3(.3,.82,1.)*f,.6+.4*f);}'}),
+ wm=new T3.MeshBasicMaterial({color:0x8fdcff,wireframe:true,transparent:true,opacity:.1,depthWrite:false}),
+ gm=(c,a)=>new T3.MeshBasicMaterial({color:c,transparent:true,opacity:a,blending:T3.AdditiveBlending,depthWrite:false}),G=new T3.Group(),hs=[];S.add(G);
+ const sp=r=>new T3.SphereGeometry(r,20,16),cy=(a,b,h)=>new T3.CylinderGeometry(a,b,h,20),
+ gp=(p,x,y)=>{const g=new T3.Group();g.position.set(x,y,0);p.add(g);return g},
+ ms=(p,g,x,y,z,a,b,c)=>{const m=new T3.Mesh(g,bm);m.position.set(x,y,z||0);m.scale.set(a||1,b||1,c||1);m.add(new T3.Mesh(g,wm));p.add(m)},
+ nd=(p,x,y)=>{const m=new T3.Mesh(sp(.05),gm(0xbff2ff,.95));m.position.set(x||0,y||0,0);p.add(m)},
+ hot=(p,c)=>{const m=new T3.Mesh(sp(.11),gm(c,1)),h=new T3.Mesh(sp(.3),gm(c,.3));m.add(h);p.add(m);hs.push(h)},U=gp(G,0,0);
+ ms(U,sp(1),0,1.74,0,.22,.28,.25);ms(U,cy(.09,.12,.3),0,1.42,0);ms(U,sp(1),0,1,0,.5,.52,.3);ms(U,cy(.33,.27,.55),0,.42,0,1,1,.78);ms(G,sp(1),0,0,0,.37,.27,.27);nd(U,0,1.4);
+ const leg=s=>{const h=gp(G,.2*s,-.05),k=gp(h,0,-.95),a=gp(k,0,-.9);nd(h);
+  ms(h,cy(.18,.12,.95),0,-.47,0);ms(h,sp(1),0,-.4,.04,.17,.38,.16);ms(k,sp(1),0,0,0,.12,.12,.12);ms(k,cy(.11,.07,.88),0,-.44,0);ms(k,sp(1),0,-.25,-.04,.115,.3,.12);nd(a);ms(a,sp(1),0,-.07,.11,.085,.06,.24);return{h,k,a}},
+ arm=s=>{const h=gp(U,.6*s,1.22),e=gp(h,0,-.66);ms(h,sp(1),0,0,0,.17,.19,.17);nd(h);ms(h,cy(.11,.085,.62),0,-.34,0);ms(h,sp(1),0,-.28,.03,.11,.22,.11);nd(e);ms(e,cy(.085,.055,.58),0,-.3,0);ms(e,sp(1),0,-.15,0,.09,.2,.09);ms(e,sp(1),0,-.66,.02,.055,.11,.04);return{h,e}},
+ L=leg(1),Q=leg(-1),A=arm(1),B=arm(-1);hot(L.k,0xff9a2e);hot(Q.k,0xff9a2e);hot(L.h,0xffc13d);
+ if(o.ring){[[1.2,.9],[1.65,.55],[2.1,.3]].forEach(([r,a])=>{const m=new T3.Mesh(new T3.TorusGeometry(r,.022,8,96),gm(0x3fd8ff,a));m.rotation.x=Math.PI/2;m.position.y=-2.08;S.add(m)});
+  const cn=document.createElement('canvas');cn.width=cn.height=128;const x=cn.getContext('2d'),g=x.createRadialGradient(64,64,0,64,64,64);g.addColorStop(0,'rgba(60,200,255,.6)');g.addColorStop(1,'rgba(60,200,255,0)');x.fillStyle=g;x.fillRect(0,0,128,128);
+  const d=new T3.Mesh(new T3.CircleGeometry(2.4,48),new T3.MeshBasicMaterial({map:new T3.CanvasTexture(cn),transparent:true,depthWrite:false,blending:T3.AdditiveBlending}));d.rotation.x=-Math.PI/2;d.position.y=-2.1;S.add(d)}
+ let t=0,ry=Math.PI/2-.35,dn=0,lx;o.p=0;o.s=o.s||1;
+ if(o.drag){cv.style.cursor='grab';cv.onpointerdown=e=>{dn=1;lx=e.clientX;cv.setPointerCapture(e.pointerId)};cv.onpointermove=e=>{if(dn){ry+=(e.clientX-lx)*.01;lx=e.clientX}};cv.onpointerup=()=>dn=0}
+ const f=()=>{if(o.x)return;requestAnimationFrame(f);const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;
+  if(cv._w!=w||cv._h!=h){cv._w=w;cv._h=h;R.setSize(w,h,false);C.aspect=w/h;C.updateProjectionMatrix()}
+  if(!o.p){t+=.045*o.s;if(!dn)ry+=.006*o.s}
+  const a=Math.sin(t)*.62,c=Math.cos(t),k1=.06+.9*Math.pow(Math.max(0,-c),1.5),k2=.06+.9*Math.pow(Math.max(0,c),1.5);
+  L.h.rotation.x=a;Q.h.rotation.x=-a;L.k.rotation.x=k1;Q.k.rotation.x=k2;L.a.rotation.x=-(a+k1)*.7;Q.a.rotation.x=-(k2-a)*.7;
+  A.h.rotation.x=-a*.7;B.h.rotation.x=a*.7;A.e.rotation.x=-.35-Math.max(0,-Math.sin(t))*.5;B.e.rotation.x=-.35-Math.max(0,Math.sin(t))*.5;
+  U.rotation.y=a*.22;G.position.y=Math.abs(Math.sin(t))*.06-.03;G.rotation.y=ry;
+  hs.forEach((q,i)=>{const z=1+.35*Math.sin(t*1.5+i);q.scale.set(z,z,z)});R.render(S,C)};
+ o.x=1;o.go=()=>{if(o.x){o.x=0;f()}};o.go();return o}
+
+let M;
+$('#b3').onclick=()=>{$('#md').classList.add('on');M=M||mk($('#cvm'),{drag:1,ring:1});M&&M.go()};
+const cm=()=>{$('#md').classList.remove('on');M&&(M.x=1)};
+$('#mx').onclick=cm;$('#md').onclick=e=>e.target.id=='md'&&cm();document.onkeydown=e=>e.key=='Escape'&&cm();
+$('#pp').onclick=e=>{if(M){M.p=!M.p;e.currentTarget.textContent=M.p?'Lecture':'Pause'}};$('#sv').oninput=e=>{if(M)M.s=+e.target.value};
+
+/* ===== Pages : Historique · Traitement · Rapport médecin · Profil patient ===== */
+const V=['dash','hist','trt','rep','pro'],esc=t=>t.replace(/[&"<]/g,c=>({'&':'&amp;','"':'&quot;','<':'&lt;'})[c]);
+function show(v){V.forEach(k=>$('#v-'+k).hidden=k!=v);document.body.classList.toggle('vr',v=='rep');const r={hist:rh,trt:rtr,rep:rr}[v];r&&r();scrollTo({top:0,behavior:'smooth'})}
+$$('nav a').forEach(a=>a.addEventListener('click',()=>show(a.dataset.v||'dash')));
+
+/* Historique : recherche, filtre, export CSV */
+const MD=[['08:00','Levodopa/Carbidopa (100 mg)'],['12:00','Entacapone (200 mg)'],['18:00','Levodopa/Carbidopa (100 mg)']],
+H=F.concat(F2).map(r=>({d:r[0],h:r[1],t:'FOG',x:`Durée ${r[2]} · Cadence ${r[3]} SPM`})),ky=r=>r.d.split('/').reverse().join('')+r.h;
+for(let i=1;i<7;i++)MD.forEach(m=>H.push({d:`0${i}/10/2026`,h:m[0],t:'Médicament',x:m[1]}));H.sort((a,b)=>ky(a)<ky(b)?1:-1);
+const hl=()=>{const q=$('#hq').value.toLowerCase(),f=$('#hf').value;return H.filter(r=>(!f||r.t==f)&&(r.d+r.h+r.t+r.x).toLowerCase().includes(q))};
+function rh(){const L=hl();$('#hb').innerHTML=L.map(r=>`<tr><td><div class="df"><span class="dot${r.t=='FOG'?'':' m'}"><i data-i="${r.t=='FOG'?'snow':'pill'}"></i></span>${r.d}</div></td><td>${r.h}</td><td>${r.t}</td><td>${r.x}</td></tr>`).join('');$('#hc').textContent=L.length+' événement(s)';icons()}
+$('#hq').oninput=rh;$('#hf').onchange=rh;
+$('#hx').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeffDate;Heure;Type;Détail\n'+hl().map(r=>[r.d,r.h,r.t,r.x].join(';')).join('\n')],{type:'text/csv'}));a.download='historique-parkinsoncare.csv';a.click();toast('Historique exporté au format CSV')};
+
+/* Traitement : synchronisé avec Tâches & Alertes */
+function rtr(){const L=T.filter(x=>x.mg),d=L.filter(x=>x.s=='done').length;
+ $('#tb').innerHTML=L.map(x=>`<tr><td>${x.h}</td><td>${x.d.split(' - ')[1]}</td><td><span class="chip ${x.s}">${x.l}</span></td><td>${x.s=='soon'?`<button class="bt sm" data-h="${x.h}">Marquer prise</button>`:''}</td></tr>`).join('');
+ $('#ob').textContent=`Observance du jour : ${d}/${L.length} prises`;$('#obb').style.width=Math.round(d/L.length*100)+'%'}
+$('#tb').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=T.find(t=>t.mg&&t.h==b.dataset.h);x.s='done';x.l='Terminée';x.w='';$('#dm').textContent=x.mg;$('#dh').textContent='à '+x.h;toast(x.t+' validée : '+x.d);rt();rtr()};
+$('#ta').onclick=()=>{const n=$('#tn').value.trim(),g=+$('#tg').value,h=$('#tt').value;if(!n||!g||!h)return toast('Renseignez le médicament, la dose et l’heure');
+ T.push({t:'Prise de médicament',d:`${h} - ${n} (${g} mg)`,s:'soon',l:'À venir',w:'planifiée',i:'check',mg:g,h});T.sort((a,b)=>a.d.slice(0,5)<b.d.slice(0,5)?-1:1);
+ $('#tn').value=$('#tg').value='';toast('Prise ajoutée à '+h+' : visible dans Tâches & Alertes');rt();rtr()};
+
+/* Rapport médecin : calculé à partir des données */
+const PF={nom:'Ahmed Ben Ali',id:'PK-00123',naiss:'14/03/1958',sexe:'Homme',diag:'Maladie de Parkinson - stade 2,5',med:'Dr Salma Trabelsi',tel:'+216 20 123 456',urg:'Fatma Ben Ali - +216 98 765 432',all:'Aucune connue'},
+PL={nom:'Nom complet',id:'Identifiant patient',naiss:'Date de naissance',sexe:'Sexe',diag:'Diagnostic',med:'Médecin référent',tel:'Téléphone',urg:'Contact d’urgence',all:'Allergies'};let pe=0;
+function rr(){const sm=a=>a.reduce((x,y)=>x+y,0),tf=sm(fog),ca=Math.round(sm(cad)/7),d=T.filter(x=>x.mg),ob=d.filter(x=>x.s=='done').length,
+ K=[['Épisodes FOG (7 jours)',tf],['Moyenne par jour',(tf/7).toFixed(1)],['Cadence moyenne',ca+' SPM'],['Cadence 01/10 → 07/10',cad[0]+' → '+cad[6]+' SPM'],['FOG par jour 01/10 → 07/10',fog[0]+' → '+fog[6]],['Observance du jour',ob+'/'+d.length+' prises']];
+ $('#rk').innerHTML=K.map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td></tr>`).join('');$('#rn').textContent=PF.nom+' ('+PF.id+') · Période 01/10/2026 – 07/10/2026 · '+PF.med;
+ $('#rwk').innerHTML=$('#wk').innerHTML;rr.t=`Rapport ParkinsonCare - ${PF.nom} (${PF.id})\nPériode : 01/10/2026 - 07/10/2026\n`+K.map(r=>r[0]+' : '+r[1]).join('\n')+'\nNotes : '+($('#rnt').value||'-')}
+$('#rpp').onclick=()=>{toast('Choisissez « Enregistrer au format PDF »');setTimeout(print,700)};
+$('#rpc').onclick=()=>{rr();(navigator.clipboard?navigator.clipboard.writeText(rr.t):Promise.reject()).then(()=>toast('Résumé copié dans le presse-papiers'),()=>toast('Copie impossible dans ce navigateur'))};
+
+/* Profil patient : modifiable, met à jour l’en-tête */
+function rp(){$('#pf').innerHTML=Object.keys(PL).map(k=>`<label>${PL[k]}<input data-k="${k}" value="${esc(PF[k])}" ${pe?'':'disabled'}></label>`).join('');$('#pn').textContent=PF.nom;$('#pi').textContent='Patient ID : '+PF.id;$('#pe').textContent=pe?'Enregistrer':'Modifier';
+ $('#og').innerHTML=[['Cadence cible ≥ 100 SPM',96,100,'SPM'],['Pas par jour ≥ 6 000',4826,6000,''],['Épisodes FOG ≤ 5 par jour',7,5,'']].map((g,i)=>`<div style="margin-bottom:12px"><div class="df" style="justify-content:space-between"><b>${g[0]}</b><span>actuel : ${g[1].toLocaleString('fr-FR')} ${g[3]}</span></div><div class="pb"><i style="width:${Math.min(100,Math.round((i<2?g[1]/g[2]:g[2]/g[1])*100))}%"></i></div></div>`).join('')}
+$('#pe').onclick=()=>{if(pe){$$('#pf input').forEach(i=>PF[i.dataset.k]=i.value.trim()||PF[i.dataset.k]);$('.top h1').textContent=PF.nom;$('.top p').textContent=`Patient ID : ${PF.id}\u00a0|\u00a0Suivi depuis le 01/10/2026`;
+ $('.usr b').textContent=PF.nom.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();$('.usr').childNodes[1].textContent=PF.nom.split(' ')[0];toast('Profil mis à jour')}pe=!pe;rp()};
+rp();
+
+/* ===== Espace médecin : liste, ajout et suppression de patients ===== */
+Object.assign(I,{users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a7 7 0 0 1 4 6"/>',plus:'<path d="M12 5v14M5 12h14"/>',
+ trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>'});
+V.push('pts');const _sh=show;show=v=>{_sh(v);document.body.classList.toggle('vp',v=='pts');v=='pts'&&rpt()};
+const SEED=[{id:'PK-00123',nom:'Ahmed Ben Ali',naiss:'14/03/1958',sexe:'Homme',stade:'2,5',tel:'+216 20 123 456',st:'À surveiller',cad:96,fog:7},
+{id:'PK-00118',nom:'Samia Gharbi',naiss:'02/09/1952',sexe:'Femme',stade:'3',tel:'+216 22 456 781',st:'Alerte',cad:78,fog:12},
+{id:'PK-00121',nom:'Mohamed Trabelsi',naiss:'21/06/1949',sexe:'Homme',stade:'2',tel:'+216 98 214 530',st:'Stable',cad:104,fog:2},
+{id:'PK-00125',nom:'Leila Mansouri',naiss:'11/12/1960',sexe:'Femme',stade:'1,5',tel:'+216 50 332 190',st:'Stable',cad:110,fog:1},
+{id:'PK-00127',nom:'Karim Jebali',naiss:'30/01/1955',sexe:'Homme',stade:'3',tel:'+216 29 874 106',st:'À surveiller',cad:88,fog:6},
+{id:'PK-00130',nom:'Nour Haddad',naiss:'17/08/1963',sexe:'Femme',stade:'2',tel:'+216 55 640 912',st:'Stable',cad:101,fog:3}];
+let P,pdel,pnew='';try{P=JSON.parse(localStorage.getItem('pc_patients'))}catch(e){}if(!Array.isArray(P))P=SEED.slice();
+const sv=()=>{try{localStorage.setItem('pc_patients',JSON.stringify(P))}catch(e){}},
+age=d=>{const[a,m,y]=d.split('/').map(Number),n=new Date();let r=n.getFullYear()-y;if(n.getMonth()+1<m||(n.getMonth()+1==m&&n.getDate()<a))r--;return r},
+ini=n=>n.split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(),hue=n=>[...n].reduce((a,c)=>a+c.charCodeAt(0),0)*7%360,
+SC={'Stable':'stb','À surveiller':'sur','Alerte':'ale','Nouveau':'nou'},vl=(x,u)=>x==null?'—':x+u,
+nid=()=>'PK-'+String(Math.max(130,...P.map(p=>+p.id.slice(3)))+1).padStart(5,'0');
+function rpt(){const n=s=>P.filter(p=>p.st==s).length,
+ K=[['Total patients','users','#e5efff','#2f7bff',P.length],['Stables','check','#dff6ea','var(--gr)',n('Stable')],['À surveiller','clock','#ffeccc','var(--or)',n('À surveiller')],['En alerte','alert','#ffe3ea','var(--pk)',n('Alerte')]];
+ $('#pdr').textContent='Connecté : '+PF.med+' · Consultez, ajoutez et supprimez les patients que vous suivez';
+ $('#pst').innerHTML=K.map(k=>`<div class="card k"><div class="ic" style="background:${k[2]};color:${k[3]}"><i data-i="${k[1]}"></i></div><span>${k[0]}</span><b>${k[4]}</b></div>`).join('');
+ const q=$('#psq').value.toLowerCase().trim(),f=$('#psf').value,L=P.filter(p=>(!f||p.st==f)&&(p.nom+p.id+p.tel).toLowerCase().includes(q));
+ $('#pgd').innerHTML=L.length?L.map(p=>{const h=hue(p.nom);return `<div class="pcd${p.id==pnew?' fl':''}"><div class="pch"><div class="pav" style="background:hsl(${h} 70% 92%);color:hsl(${h} 55% 32%)">${esc(ini(p.nom))}</div>
+  <div class="pin"><b>${esc(p.nom)}</b><small>${p.id} · ${age(p.naiss)} ans · ${p.sexe}</small></div><button class="dl" data-id="${p.id}" title="Supprimer ce patient" aria-label="Supprimer ${esc(p.nom)}"><i data-i="trash"></i></button></div>
+  <div class="pms"><div><small>Cadence moy.</small><b>${vl(p.cad,' SPM')}</b></div><div><small>FOG / jour</small><b>${vl(p.fog,'')}</b></div><div><small>Stade</small><b>${p.stade}</b></div></div>
+  <div class="pcf"><span class="chip ${SC[p.st]}">${p.st}</span><span><i data-i="phone"></i>${esc(p.tel)}</span></div></div>`}).join('')
+ :`<div class="pem"><i data-i="users"></i><b>Aucun patient trouvé</b><span>Modifiez votre recherche ou ajoutez un nouveau patient.</span><button class="bt padd bl"><i data-i="plus"></i>Ajouter un patient</button></div>`;icons()}
+const cl=()=>$$('.ptm').forEach(m=>m.hidden=true),
+oa=()=>{$('#pid').textContent=nid();['#pnm','#pdn','#ptl'].forEach(i=>$(i).value='');$('#pdn').max=new Date().toISOString().slice(0,10);$('#pma').hidden=false;setTimeout(()=>$('#pnm').focus(),50)};
+$('#psq').oninput=rpt;$('#psf').onchange=rpt;
+$('#v-pts').addEventListener('click',e=>{if(e.target.closest('.padd'))return oa();const b=e.target.closest('.dl');
+ if(b&&(pdel=P.find(p=>p.id==b.dataset.id))){$('#pdt').textContent=`${pdel.nom} (${pdel.id}) sera retiré de votre liste. Cette action est irréversible.`;$('#pmd').hidden=false}});
+$$('.ptm').forEach(m=>m.addEventListener('click',e=>{if(e.target==m||e.target.closest('[data-c]'))cl()}));
+addEventListener('keydown',e=>e.key=='Escape'&&cl());$('#pma').addEventListener('keydown',e=>e.key=='Enter'&&e.target.tagName=='INPUT'&&$('#psv').click());
+$('#psv').onclick=()=>{const nom=$('#pnm').value.trim().replace(/\s+/g,' '),d=$('#pdn').value,tel=$('#ptl').value.trim();
+ if(nom.length<3)return toast('Saisissez le nom complet du patient');if(!d||new Date(d)>new Date())return toast('Date de naissance invalide');
+ const[y,m,j]=d.split('-'),nb=`${j}/${m}/${y}`;if(P.some(p=>p.nom.toLowerCase()==nom.toLowerCase()&&p.naiss==nb))return toast('Ce patient existe déjà dans votre liste');
+ const p={id:$('#pid').textContent,nom,naiss:nb,sexe:$('#psx').value,stade:$('#pst2').value,tel:tel||'—',st:'Nouveau',cad:null,fog:null};
+ P.unshift(p);pnew=p.id;sv();cl();$('#psq').value='';$('#psf').value='';rpt();toast(`Patient ajouté : ${nom} (${p.id})`);setTimeout(()=>pnew='',1600)};
+$('#pdl').onclick=()=>{if(!pdel)return;P=P.filter(p=>p.id!=pdel.id);sv();cl();rpt();toast(`Patient supprimé : ${pdel.nom} (${pdel.id})`);pdel=null};
+
+/* ===== Initialisation ===== */
+$$('nav a,.foot a').forEach(a=>a.onclick=()=>{if(a.closest('nav')){$$('nav a').forEach(b=>b.classList.remove('on'));a.classList.add('on')}if(a.dataset.m!=null)toast('« '+a.textContent.trim()+' » : bientôt disponible')});
+$('#rg').onchange=e=>toast('Période sélectionnée : '+e.target.value);
+$('#gx').onclick=()=>{toast('Génération du rapport PDF en cours…');setTimeout(print,900)};
+$$('.n').forEach(e=>{const n=+e.dataset.n,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*k).toLocaleString('fr-FR');if(k<1)requestAnimationFrame(f)})(t0)});
+rt();rf();icons();mk($('#cvs'),{s:.7});mk($('#cv3'),{ring:1,s:.9});
+setTimeout(()=>$('.pb i').style.width='86%',300);
+setTimeout(()=>toast('Rappel : prochaine prise à 12:00 – Entacapone (200 mg)'),1500);
+</script>
+</body></html>
+<script>
+// --- NeuroSync Real-Time Doctor Synchronization ---
+let lastKnownState = "NORMAL";
+let lastEpisodeTime = null;
+
+async function syncDoctorDashboard() {
+  try {
+    const res = await fetch('/api/live');
+    if (!res.ok) return;
+    const data = await res.json();
+
+    // 1. Live Cadence KPI (Targeting 4th KPI card)
+    const cadenceCard = document.querySelectorAll('.kp .k')[3];
+    if (cadenceCard) {
+      const cadVal = cadenceCard.querySelector('b .n');
+      if (cadVal) cadVal.textContent = data.cadence_spm;
+    }
+
+    // 2. FOG Count KPI (Targeting 2nd KPI card)
+    const fogCard = document.querySelectorAll('.kp .k')[1];
+    if (fogCard && data.episodes) {
+      const fogVal = fogCard.querySelector('b .n');
+      if (fogVal) fogVal.textContent = 7 + data.episodes.length;
+    }
+
+    // 3. Populate FOG Incidents Table (#fb)
+    const fbTable = document.getElementById('fb');
+    if (fbTable && data.episodes && data.episodes.length > 0) {
+      const liveRowsHtml = data.episodes.map(ep => `
+        <tr style="background: rgba(255, 77, 109, 0.08); font-weight: 600;">
+          <td>
+            <div class="df">
+              <span class="dot" style="background: var(--pk); animation: fl 1s infinite;">
+                <i data-i="snow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/></svg></i>
+              </span>
+              Aujourd'hui
+            </div>
+          </td>
+          <td style="color: var(--pk); font-weight: 700;">${ep.time}</td>
+          <td>${ep.duration} s</td>
+          <td>${data.cadence_spm}</td>
+          <td>100</td>
+        </tr>
+      `).join('');
+
+      // Inject live episodes at the top of the table
+      fbTable.innerHTML = liveRowsHtml + fbTable.innerHTML;
+    }
+
+    // 4. Handle State Transitions (Alerte FOG active)
+    if (data.state === "FOG_DETECTED") {
+      // Flash the alert bell badge
+      const bells = document.querySelectorAll('.nb');
+      bells.forEach(b => {
+        b.textContent = parseInt(b.textContent || '3') + 1;
+        b.style.display = 'grid';
+      });
+
+      // Show real-time doctor toast alert once per episode
+      if (lastKnownState !== "FOG_DETECTED") {
+        if (typeof toast === "function") {
+          toast(`🚨 ALERTE MÉDECIN : Épisode FOG détecté chez Ahmed Ben Ali ! (FI: ${Number(data.freeze_index).toFixed(2)})`);
+        }
+
+        // Add real-time card into the right-hand tasks panel (#tl)
+        const tl = document.getElementById('tl');
+        if (tl) {
+          const alertItem = document.createElement('div');
+          alertItem.className = 'ti alert';
+          alertItem.style.borderLeft = '4px solid var(--pk)';
+          alertItem.innerHTML = `
+            <div class="c" style="background: var(--pk);"><i data-i="snow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M3.3 7l17.4 10M3.3 17"/></svg></i></div>
+            <b>Épisode FOG EN COURS</b>
+            <span class="st" style="color: var(--pk);"><i data-i="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></i>Immédiat</span>
+            <small>${new Date().toLocaleTimeString()} - FI : ${Number(data.freeze_index).toFixed(2)} | Cadence : 0 SPM</small>
+            <span class="w">En direct</span>
+          `;
+          tl.prepend(alertItem);
+        }
+      }
+    }
+
+    lastKnownState = data.state;
+
+  } catch (err) {
+    console.warn("Synchronisation du tableau de bord médecin en attente...", err);
+  }
+}
+
+// Interroger le serveur toutes les secondes pour un verrouillage parfait
+setInterval(syncDoctorDashboard, 1000);
+syncDoctorDashboard();
+</script>

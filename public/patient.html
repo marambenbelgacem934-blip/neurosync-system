@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f131d"><title>NeuroSync WalkAssist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+<style>
+:root{--bg:#0f131d;--s0:#0a0e17;--s1:#171c25;--s2:#1b2029;--s3:#262a34;--s4:#31353f;--tx:#dfe2f0;--mu:#bacac5;--ol:#3c4a46;--pr:#57f1db;--pc:#2dd4bf;--sec:#bdc2ff;--sc:#2f3aa3;--ter:#66f3b6;--er:#ffb4ab;--rose:#fb7185;--mono:"JetBrains Mono",ui-monospace,monospace;--jk:"Plus Jakarta Sans",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--tx);font:400 16px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.ms{font-family:"Material Symbols Outlined";font-weight:400;font-size:20px;line-height:1;vertical-align:middle;display:inline-block;width:1em;height:1em;overflow:hidden;white-space:nowrap;font-variation-settings:"FILL" 0;user-select:none}
+body:not(.icons) .ms{visibility:hidden}
+.ms.f{font-variation-settings:"FILL" 1}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+#top{position:sticky;top:0;z-index:20;background:rgba(15,19,29,.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06);padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px}
+.bar{max-width:1200px;margin:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.logo{width:40px;height:40px;border-radius:50%;border:2px solid var(--pc);display:grid;place-items:center;color:var(--pc);flex:none}
+.brand b{display:block;font:700 15px/1 var(--jk);letter-spacing:.04em}.brand span{font:600 12px var(--mono);color:var(--pr);letter-spacing:.2em;text-transform:uppercase}
+#demo{min-height:44px;padding:0 16px;border-radius:99px;background:#5a0f14;border:1px solid rgba(255,180,171,.3);color:var(--er);font:600 14px Inter;display:flex;gap:6px;align-items:center}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--pc);color:#003731;display:grid;place-items:center}
+.chips{width:100%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.chip{flex:1 0 auto;display:flex;gap:8px;align-items:center;justify-content:center;padding:8px 14px;border-radius:99px;background:var(--s2);font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--pc);box-shadow:0 0 8px var(--pc);flex:none}
+#alertbar{display:none;max-width:1200px;margin:10px auto 0;padding:10px 14px;border-radius:14px;background:rgba(147,0,10,.45);border:1px solid rgba(255,180,171,.4);font-weight:600;align-items:center;gap:10px;justify-content:space-between}
+#alertbar.on{display:flex}
+nav{position:fixed;z-index:30;left:0;right:0;bottom:0;display:flex;background:rgba(10,14,23,.94);backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.07);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;justify-content:center;font:500 11px Inter;color:#9fb0ab;border-radius:14px}
+nav button.on{color:var(--pr)}nav button.on .ms{font-variation-settings:"FILL" 1}
+main{max-width:1200px;margin:auto;padding:16px 16px 190px}
+section{display:none}section.on{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));align-items:start;animation:in .3s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.wide{grid-column:1/-1}
+@media(min-width:900px){
+ nav{top:0;bottom:auto;right:auto;width:92px;flex-direction:column;justify-content:flex-start;padding:110px 8px 8px;border-top:0;border-right:1px solid rgba(255,255,255,.07)}
+ nav button{min-height:68px}
+ #top,main{margin-left:92px}
+ main{padding:24px 28px 60px}
+}
+@media(max-width:380px){.chip{font-size:10px;padding:8px 10px}}
+.card{background:var(--s1);border:1px solid rgba(255,255,255,.06);border-radius:24px;padding:20px;position:relative;overflow:hidden}
+.card.g{background:linear-gradient(135deg,var(--s1),#1d1519 70%)}
+.k{font:600 11px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pr)}
+.k.m{color:var(--mu)}.k.r{color:var(--rose)}.k.i{color:var(--sec)}
+h2{font:700 26px/1.2 var(--jk);margin:4px 0}h3{font:600 22px/1.2 var(--jk)}
+.mu{color:var(--mu);font-size:14px}
+.big{font:800 clamp(34px,8vw,48px)/1 var(--jk)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;background:rgba(45,212,191,.14);color:var(--pr)}
+.badge.r{background:rgba(147,0,10,.45);color:var(--er)}.badge.i{background:var(--sc);color:var(--sec)}.badge.g{background:rgba(68,214,155,.15);color:var(--ter)}
+.btn{width:100%;min-height:56px;border-radius:16px;background:var(--pc);color:#00201c;font:700 16px Inter;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px}
+.btn.v{background:#bdc2ff;color:#131e8c}.btn.d{background:#8f0008;color:#fff}.btn.s{background:var(--s3);color:var(--tx);font-weight:600;min-height:52px}.btn.p{background:var(--pr)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inset{background:var(--s0);border-radius:16px;padding:14px}
+.seg{display:flex;gap:6px;background:var(--s0);padding:4px;border-radius:99px}
+.seg button{min-height:40px;padding:0 14px;border-radius:99px;color:var(--mu);font:600 14px Inter;white-space:nowrap}.seg button.on{background:var(--pc);color:#00201c}
+.tog{width:56px;height:32px;border-radius:99px;background:var(--s4);position:relative;flex:none;transition:.2s}.tog:after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.tog.on{background:#44d69b}.tog.on:after{left:28px}
+.dial{position:relative;width:min(100%,300px);aspect-ratio:1;margin:12px auto}
+.dial svg{width:100%;height:100%}.dial .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:2px}
+.dial .num{font:800 clamp(60px,18vw,84px)/1 var(--jk)}
+.pill{display:inline-block;padding:4px 14px;border-radius:99px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.3);color:var(--pr);font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.bars{display:flex;align-items:flex-end;gap:4px;height:130px;margin:12px 0 6px}.bars i{flex:1;border-radius:4px 4px 0 0;background:#1e7a6e;min-height:4px}.bars i.h{background:#f4a7a0}
+body.frozen .num{color:var(--er)}body.frozen .pill{background:rgba(147,0,10,.4);border-color:rgba(255,180,171,.4);color:var(--er)}
+body.frozen #top{box-shadow:0 8px 40px rgba(244,63,94,.2)}
+.hub{width:min(220px,70%);aspect-ratio:1;border-radius:50%;margin:14px auto;display:grid;place-items:center;text-align:center;border:3px solid var(--pc);background:radial-gradient(circle,rgba(45,212,191,.28),#06241f);transition:transform .08s,box-shadow .08s}
+.hub.p{transform:scale(1.07);box-shadow:0 0 54px rgba(45,212,191,.55)}
+.pills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pills button{min-height:56px;border-radius:12px;background:var(--s3);font:600 14px Inter}.pills button small{display:block;font:500 10px var(--mono);color:var(--mu)}.pills button.on{background:var(--pc);color:#00201c}.pills button.on small{color:#00574d}
+#wave{display:flex;align-items:center;justify-content:center;gap:3px;height:56px;background:var(--s0);border-radius:14px}#wave i{width:4px;border-radius:3px;background:linear-gradient(var(--pr),var(--sec));height:6px}
+.quote{background:var(--s0);border-radius:14px;padding:14px;font-size:17px;margin-top:10px}
+.floor{height:170px;border-radius:16px;background:linear-gradient(#0a0e17,#131a28);position:relative;overflow:hidden;margin:12px 0}
+.floor:before{content:"";position:absolute;left:-30%;right:-30%;bottom:-60%;height:130%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 44px),repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 30px);transform:perspective(300px) rotateX(62deg)}
+.laser{position:absolute;left:6%;right:6%;top:68%;height:6px;border-radius:6px;background:#6ffbbe;box-shadow:0 0 16px #10B981,0 0 40px #10B981;opacity:0;transition:.3s}.laser.on{opacity:1;animation:gl 1.4s infinite alternate}
+@keyframes gl{to{box-shadow:0 0 26px #34D399,0 0 64px #10B981}}
+.ft{position:absolute;top:26%;color:#8aa;font:500 11px var(--mono);text-align:center}
+.step{display:flex;gap:14px;background:var(--s2);border-radius:14px;padding:14px;margin-top:10px}.step>b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:700;background:var(--sc);color:var(--sec)}.step:nth-of-type(2)>b{background:#005236;color:var(--ter)}.step:nth-of-type(3)>b{background:#005047;color:var(--pr)}.step strong{display:block;font-weight:600}
+#rec{position:fixed;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 24px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:25;display:none;border-radius:18px;background:var(--pc);color:#00201c;padding:12px 18px;text-align:left;box-shadow:0 10px 36px rgba(45,212,191,.35);min-height:60px}
+#rec.on{display:flex;align-items:center;gap:12px}#rec b{display:block;font:700 16px Inter}#rec small{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+@media(min-width:900px){#rec{bottom:24px;left:calc(50% + 46px)}}
+.inc{background:var(--s1);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:16px;margin-top:12px}
+.inc .tr{background:var(--s0);border-radius:12px;padding:12px;margin:10px 0;display:grid;gap:6px;font-size:14px}.inc .tr div{display:flex;justify-content:space-between;gap:10px}.inc .tr span{color:var(--mu)}.inc .tr b{color:var(--pr);text-align:right;font-weight:600}.inc .tr div:first-child b{color:var(--tx)}
+.rg{position:relative;width:76px;height:76px}.rg svg{width:100%;height:100%;transform:rotate(-90deg)}.rg b{position:absolute;inset:0;display:grid;place-items:center;font:700 14px var(--mono);color:var(--rose)}
+.av{width:60px;height:60px;border-radius:50%;object-fit:cover;background:var(--s3);flex:none}
+#toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(84px + env(safe-area-inset-top,0px));z-index:50;background:var(--s3);border:1px solid var(--pc);padding:12px 18px;border-radius:14px;font-weight:600;display:none;max-width:calc(100% - 24px)}#toast.on{display:block}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header id="top"><div class="bar">
+ <div class="brand"><div class="logo"><span class="ms">monitoring</span></div><div><b>NEUROSYNC</b><span id="scr">Gait HUD</span></div></div>
+ <button id="demo"><span class="ms f">bolt</span>Demo Freeze</button><div class="avatar"><span class="ms f">person</span></div>
+ <div class="chips"><div class="chip"><span class="ms" style="font-size:15px;color:var(--pc)">bolt</span>96% | Vitalis Active</div><div class="chip"><span class="dot"></span>100 Hz IMU</div><div class="chip"><span class="dot" style="background:var(--sec);box-shadow:none"></span>PT-1042 <span id="live">Live</span></div></div></div>
+<div id="alertbar" role="alert"><span id="abt"></span><span style="display:flex;gap:8px"><button class="badge" id="ans" hidden style="min-height:40px;background:var(--s3);color:var(--tx)">They answered</button><button class="badge" id="sd" style="min-height:40px;background:var(--pc);color:#00201c">I am safe</button></span></div></header>
+<div id="toast" role="status"></div>
+<main>
+<section id="s0" class="on">
+ <div class="card wide"><div class="row"><div class="row" style="justify-content:flex-start;gap:14px"><div class="logo" style="border-radius:14px;border-color:var(--ol)"><span class="ms">watch</span></div><div><b style="font:700 18px var(--jk)">Vitalis One Dial</b><div class="mu">BLE 5.3 Active · 100 Hz Sync</div></div></div><span class="badge">Auto-FOG On</span></div>
+  <div class="two" style="margin-top:14px"><div class="inset"><span class="k m">Dome Transducer</span><div class="k" style="color:var(--ter);margin-top:4px;letter-spacing:.05em">Normal Rhythm</div></div><div class="inset"><span class="k m">Dual IMU + PPG</span><div class="k" style="color:var(--ter);margin-top:4px;letter-spacing:.05em">100% Calibrated</div></div></div></div>
+ <div class="card"><div class="row"><span class="k m">Real-time locomotor cadence</span><span class="badge g">Streaming</span></div>
+  <div class="dial"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="12"/><circle id="ring" cx="100" cy="100" r="86" fill="none" stroke="#57f1db" stroke-width="12" stroke-linecap="round" stroke-dasharray="540" stroke-dashoffset="150" transform="rotate(-90 100 100)" style="transition:all .6s;filter:drop-shadow(0 0 8px rgba(87,241,219,.5))"/></svg>
+   <div class="c"><div class="num" id="cad">104</div><div class="mu">SPM</div><div><span class="pill" id="dk">Nominal Locomotion</span></div></div></div>
+  <div class="two"><div class="inset"><span class="k m">Stride symmetry</span><div><b style="font:800 22px var(--jk)" id="sym">98.2%</b> <small class="k" style="color:var(--ter)">Optimal</small></div></div><div class="inset"><span class="k m">Freeze index</span><div><b style="font:800 22px var(--jk)" id="fi">0.65</b> <small class="mu">Safe &lt; 1.20</small></div></div></div>
+  <button class="btn p" id="pulse" style="margin-top:14px"><span class="ms">graphic_eq</span>Transmit Metronome Pacing Pulse</button></div>
+ <div class="card"><div class="row" style="flex-wrap:wrap"><div><span class="k m">Locomotor stability</span><h3>Freeze Chronology</h3></div><div class="seg"><button class="on" data-r="24">24 Hours</button><button data-r="7">7 Days</button></div></div>
+  <p class="mu" id="fzsub" style="margin-top:8px"></p><div class="bars" id="bars"></div><div class="row mu" id="blbl" style="font:500 11px var(--mono)"></div></div>
+ <div class="card wide"><div class="row"><div><span class="k i">Pharmacokinetics sync</span><h3>Levodopa / Carbidopa</h3><div class="mu">Controlled Release • 100 / 25 mg</div></div><div class="logo" style="border-radius:14px;border-color:var(--sc);color:var(--sec);background:var(--sc)"><span class="ms">medication</span></div></div>
+  <div class="inset" id="dbox" style="margin-top:14px;background:#3a0f14;border:1px solid rgba(255,180,171,.25)"><div class="row" style="justify-content:flex-start;gap:12px"><span class="ms" style="color:var(--er)">timer</span><div><b style="color:var(--er)" id="dt">Due in 15 mins (12:30 PM)</b></div></div></div>
+  <div class="row mu" style="margin-top:14px"><span>Plasma Concentration</span><span id="sw" style="color:var(--rose)">Susceptibility Window</span></div>
+  <svg id="pk" viewBox="0 0 400 130" width="100%" preserveAspectRatio="none" style="margin-top:6px;display:block;height:140px"></svg>
+  <div class="row mu" style="font:500 11px var(--mono)"><span id="pl">08:30 AM (Last Dose)</span><span id="pr" style="color:var(--rose)">12:30 PM (Wear-Off Point)</span></div>
+  <button class="btn v" id="dose" style="margin-top:14px"><span class="ms">vaccines</span>Mark Dose Taken (12:30 PM)</button></div>
+</section>
+<section id="s1">
+ <div class="card wide g" style="border-color:rgba(255,180,171,.2)"><div class="row" style="justify-content:flex-start"><span class="dot" id="bdot" style="background:var(--ter);box-shadow:none"></span><span class="k" id="bst" style="color:var(--ter)">Standby · Ankle band monitoring</span></div>
+  <p id="bd" style="margin:8px 0">Sensory cueing engages automatically the moment the ankle band detects a freeze.</p>
+  <div class="row" style="border-top:1px solid rgba(255,255,255,.07);padding-top:10px;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;flex-wrap:wrap"><span style="color:var(--ter)">Confidence: <span id="conf">--</span></span><span class="mu">Duration: <span id="dur">0.0s</span></span><span style="color:var(--pr)">Active sync</span></div></div>
+ <div class="card"><div class="row"><h3 style="font-size:20px">Cognitive Voice Reassurance</h3><span class="badge g">Live</span></div>
+  <div id="wave" style="margin-top:12px"></div><div class="quote" id="say">“Stand tall, John. Do not fight the freeze. Take a slow, quiet breath. Shift your weight to your right heel, and step forward on the chime.”</div>
+  <div class="two" style="margin-top:10px"><button class="btn s" id="vp"><span class="ms">pause</span>Pause Audio</button><button class="btn s" id="vr"><span class="ms">replay</span>Replay Cue</button></div></div>
+ <div class="card"><div class="row"><h3 style="font-size:20px">Acoustic Motor Pacer</h3><span class="badge g">RAS</span></div>
+  <div class="hub" id="hub"><div><div class="big" id="bpmv" style="font-size:54px">110</div><div class="k m">BPM Target</div></div></div>
+  <div class="pills"><button data-b="90">90 BPM<small>Gentle</small></button><button class="on" data-b="110">110 BPM<small>Target</small></button><button data-b="125">125 BPM<small>Recovery</small></button></div>
+  <button class="btn s" id="mt" style="margin-top:10px"><span class="ms f">stop_circle</span><span id="mtt">Resume Acoustic Pacer</span></button>
+  <p class="mu" style="margin-top:10px"><b style="color:var(--pr)">Clinical note:</b> Auditory rhythmic beats stimulate premotor cortex circuits to help overcome basal ganglia freezing.</p></div>
+ <div class="card"><div class="row"><div class="row" style="gap:8px"><span class="ms" style="color:var(--ter)">lightbulb</span><b>Visual Optical Cue</b></div><button class="tog" id="lz" aria-label="Laser line projection"></button></div>
+  <div class="k" style="margin-top:4px;color:var(--ter)" id="lzt">Laser Line Projection (OFF)</div>
+  <div class="floor"><div class="ft" style="left:26%"><span class="ms">do_not_step</span><br>Step 1</div><div class="ft" style="left:56%;color:var(--pr)"><span class="ms">steps</span><br>Stride Over</div><div class="laser" id="laser"></div></div>
+  <p class="mu"><span class="ms" style="font-size:16px">visibility</span> Look at the bright green line. Step <b style="color:var(--pr)">squarely over it</b> to initiate stride.</p></div>
+ <div class="card wide"><div class="row"><h3 style="font-size:20px">Immediate Protocol</h3><span class="k m" style="font-size:10px">Neurologist verified</span></div>
+  <div class="step"><b>1</b><div><strong>Calm &amp; Breathe</strong><span class="mu">Do not push forward. Inhale for 4 seconds, exhale softly.</span></div></div>
+  <div class="step"><b>2</b><div><strong>Rock Side to Side</strong><span class="mu">Gently shift your center of gravity toward your right heel.</span></div></div>
+  <div class="step"><b>3</b><div><strong>Lift &amp; March</strong><span class="mu">March your left foot high over the projected line to the chime.</span></div></div></div>
+</section>
+<section id="s2">
+ <div class="card"><span class="k">Band sync</span><h2>Vitalis One Dial</h2><span class="badge g">Connected · BLE 5.3</span>
+  <div class="two" style="margin-top:14px"><div class="inset"><span class="k m">Battery</span><div class="big" style="font-size:30px">96%</div></div><div class="inset"><span class="k m">Sampling</span><div class="big" style="font-size:30px">100 Hz</div></div><div class="inset"><span class="k m">Last sync</span><div class="big" style="font-size:22px" id="ls">just now</div></div><div class="inset"><span class="k m">Firmware</span><div class="big" style="font-size:22px">v2.4.1</div></div></div>
+  <button class="btn" id="sync" style="margin-top:14px"><span class="ms">sync</span>Sync Band Now</button></div>
+ <div class="card"><span class="k i">Sensor array</span>
+  <div class="inset" style="margin-top:10px"><div class="row"><span>Dual IMU (shank)</span><span class="badge g">Calibrated</span></div></div>
+  <div class="inset" style="margin-top:8px"><div class="row"><span>PPG optical array</span><span class="badge g">Signal good</span></div></div>
+  <div class="inset" style="margin-top:8px"><div class="row"><span>Dome transducer</span><span class="badge g">Normal rhythm</span></div></div>
+  <div class="inset" style="margin-top:8px"><div class="row"><span>Haptic cuff</span><span class="badge">Ready · 310 ms</span></div></div></div>
+</section>
+<section id="s3">
+ <div class="wide" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+  <div class="card"><span class="k m">24h Freezes</span><div class="big" id="hz">4</div><div class="k" style="color:var(--ter);margin-top:8px">↓ -2 vs yesterday</div></div>
+  <div class="card"><span class="k m">Avg Duration</span><div class="big">5.8<small class="mu">s</small></div><div class="k" style="color:var(--ter);margin-top:8px">1.4s faster break</div></div>
+  <div class="card"><span class="k m">Cue Latency</span><div class="big">310<small class="mu">ms</small></div><div class="k" style="color:var(--ter);margin-top:8px">Cuff auto-fire</div></div>
+  <div class="card"><span class="k m">IMU Fidelity</span><div class="big">99.6<small class="mu">%</small></div><div class="k" style="color:var(--ter);margin-top:8px">100Hz Shank IMU</div></div></div>
+ <div class="card wide"><div class="row"><div><span class="k">Rolling 24h trace</span><h3>Freeze Index (FI) &amp; Dosing</h3></div><span class="badge g">Synchronized</span></div>
+  <div class="inset" style="margin-top:12px"><div class="mu" style="font:500 12px var(--mono);display:flex;flex-wrap:wrap;gap:6px 16px"><span style="color:var(--rose)">--- Arrest (≥ 2.0)</span><span style="color:#7dd3fc">--- Prodrome (≥ 1.2)</span><span style="color:var(--sec)">● Levodopa</span></div><svg id="ch" viewBox="0 0 400 220" width="100%" style="display:block"></svg></div>
+  <div class="inset" style="margin-top:12px;display:flex;gap:12px;align-items:center;border:1px solid rgba(255,180,171,.15)"><span class="ms" style="color:var(--er)">medical_information</span><div><div class="k r" style="font-size:10px">Wearing-off vulnerability detected</div><b>3 of 4 freeze episodes</b> <span class="mu">manifested within 35 minutes prior to scheduled Levodopa administration windows.</span></div></div></div>
+ <div class="wide"><div class="row" style="flex-wrap:wrap"><h3>Telemetry Feed</h3><div class="seg" id="flt"><button class="on" data-f="all">All (4)</button><button data-f="sev">Severe (2)</button><button data-f="pre">Pre-Dose (3)</button></div></div><div id="log"></div>
+  <button class="btn p" id="exp" style="margin-top:16px;min-height:72px;justify-content:space-between"><span style="display:flex;gap:12px;align-items:center;text-align:left"><span class="ms">upload_file</span><span><b>Export Neurologist Telemetry</b><br><small style="font:500 11px var(--mono)">HL7 / FHIR • 256-BIT ENCRYPTED</small></span></span><span class="badge" style="background:rgba(0,55,49,.25);color:#00201c">EHR Sync</span></button>
+  <p class="mu" style="text-align:center;margin-top:10px;font:500 12px var(--mono)">Encrypted clinical packet prepared for Dr. H. Vance (Neurology / Movement Disorders)</p></div>
+</section>
+<section id="s4">
+ <div class="card wide"><div class="row"><span class="badge g">Failover Armed</span><span class="k m">Tier-3 Active</span></div><h2 style="margin-top:12px">Care Circle &amp; Dispatch</h2><p class="mu">Continuous gait sensors sync with your trusted circle. Critical freezes or fall incidents trigger immediate caregiver escalation with medical failover.</p><div class="k" style="margin-top:10px;font-size:10px">LTE Relay: 99.8% · GPS Lock: Accurate ±1.4m</div></div>
+ <div class="card g wide" style="border-color:rgba(255,180,171,.2)"><div class="k r">⚠ Level-3 Medical Safeguard</div><h2 id="hs">Automated Ambulance Dispatch</h2>
+  <div class="inset" style="margin:10px 0">If an acute motor freeze or post-freeze fall is detected by the ankle band and the user does not dismiss the push notification within <b style="color:var(--pr)">45 seconds</b>, the app calls the care circle (Sarah Vance, then Dr. Ahmed Ben Salah). If neither answers, it auto-dials Emergency Services (190 / 911) with live GPS coordinates, heart rate telemetry, and the freeze packet. Walking again cancels the alert.</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px"><div class="inset" style="text-align:center"><span class="ms" style="color:var(--pr)">location_on</span><div style="font-weight:600">Live GPS Active</div><div class="k" style="font-size:10px">37.7749° N</div></div><div class="inset" style="text-align:center"><span class="ms" style="color:var(--pr)">monitoring</span><div style="font-weight:600">Telemetry Staged</div><div class="mu" style="font-size:12px">100 Hz Sync</div></div>
+   <div class="inset" style="display:grid;place-items:center;text-align:center"><div class="rg"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#3c2a2a" stroke-width="3"/><circle id="rg" cx="18" cy="18" r="15" fill="none" stroke="#fb7185" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="0"/></svg><b id="rn">45s</b></div><div style="font-weight:600;font-size:14px" id="rt">Window Armed</div></div></div>
+  <div class="row" style="margin:14px 0 4px"><span class="mu">Auto-dial 190 if the care circle does not answer</span><button class="tog on" id="ad" aria-label="Auto dial"></button></div>
+  <button class="btn p" id="safe" style="margin-top:10px"><span class="ms">check_circle</span>I Am Safe (Dismiss Fall Alert)</button><button class="btn d" id="sos" style="margin-top:10px"><span class="ms">sos</span>Dispatch Ambulance &amp; SOS Now</button></div>
+ <div class="card wide" style="display:flex;gap:14px;align-items:center"><span class="ms" style="font-size:32px;color:var(--sec)">cell_tower</span><div><div class="k i">Dual cellular + BLE mesh uplink</div><p>Band automatically switches to secondary eSIM if home Wi-Fi disconnects during an emergency.</p></div></div>
+ <div class="wide row"><h3>Care Circle</h3><button class="badge" style="min-height:44px;padding:0 16px;background:var(--s3)" onclick="toast('Invite sent (demo).')">+ Add</button></div>
+ <div class="card"><div class="row" style="justify-content:flex-start;gap:14px"><img class="av" alt="Sarah Vance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa3Hf4rvLz2ILRr3wX2H8AabXChLPPphMxr1XA9T8nhrNKO-2TcIOtcMH9x6RnV39CSZ3fQKXuHM_pHlIy_BRTFHMfDjq9I7REiwYI-3AH1pcn3O-5XC35xMw_pRU8OnXyql-Yo5FIuzC3ZF_SmzudLXUJtWULvsrV98yMw-EU3mQzOB8iSJly5NpURw9NTQgJ_EQnFNbMAtVTSkXuK7BkEPgXJ-IlHrUGUK-C9iCyphX4NlL-_Jx54A"><div><b style="font:600 18px Inter">Sarah Vance</b> <span class="badge" style="font-size:9px">Primary</span><div class="mu">Daughter &amp; Health Proxy · <span style="color:var(--ter)">● &lt;2 mi · Live</span></div></div></div>
+  <div class="two" style="margin-top:14px"><button class="btn s" onclick="location.href='tel:+21698420115'"><span class="ms" style="color:var(--pr)">call</span>1-Tap Call</button><button class="btn s" onclick="location.href='sms:+21698420115?body=NeuroSync%20alert%3A%20please%20call%20me.'"><span class="ms" style="color:var(--pr)">sms</span>Quick SMS</button></div></div>
+ <div class="card"><div class="row" style="justify-content:flex-start;gap:14px"><img class="av" alt="Dr. Ahmed Ben Salah" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf3z79r9srQmmn4gbfd4shaGYeVbS9hlKn8mE_RkyhEEc2B_OGWW11F5YfhRTOV6rgkHgFXGKxFTmsTDBYoADJJb2Ze0FNOQRmiw8WWRux3qqtGE2ILdRxB60raxG-keF-BfrIbLTphwPrWU5Vo2qp30N4qN23pvy8eogPpGtdrMZeq_hnFTHimTGAfMkKUV6l5ee8VTeNmbr1iaySL7S0leGMxfmd0LM75IX3EFxA5IDT_D4OpoGcKQ"><div><b style="font:600 18px Inter">Dr. Ahmed Ben Salah</b> <span class="badge i" style="font-size:9px">Secondary</span><div class="mu">Movement Disorders Clinic · On call</div></div></div>
+  <div class="two" style="margin-top:14px"><button class="btn s" onclick="location.href='tel:+21671850000'"><span class="ms" style="color:var(--sec)">local_hospital</span>Call Clinic</button><button class="btn s" onclick="toast('Vitals pushed to the clinic EMR queue.')"><span class="ms" style="color:var(--sec)">cloud_upload</span>Push Vitals</button></div></div>
+</section>
+</main>
+<button id="rec"><span class="ms f" style="font-size:28px">check_circle</span><span><b>I'm Unfrozen &amp; Walking</b><small>Tap to log recovery &amp; notify caregiver</small></span></button>
+<nav id="nav"></nav>
+<script src="escalation.js"></script>
+<script>
+if(document.fonts)document.fonts.load('20px "Material Symbols Outlined"','bolt').then(f=>f&&f.length&&document.body.classList.add('icons')).catch(()=>{});
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const S={cad:104,fi:.65,frozen:false,bpm:110,metro:false,voice:true,left:0,armed:false,auto:true,fz:4,dosed:false,t0:0};
+const TABS=[['Gait HUD','speed'],['AI Assist','psychology'],['Band Sync','vital_signs'],['History','analytics'],['Responders','shield_person']];
+$('#nav').innerHTML=TABS.map((t,i)=>`<button class="${i?'':'on'}"><span class="ms">${t[1]}</span>${t[0]}</button>`).join('');
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),3400)}
+function show(i){$$('section').forEach((s,j)=>s.classList.toggle('on',i==j));$$('nav button').forEach((b,j)=>b.classList.toggle('on',i==j));$('#scr').textContent=TABS[i][0];$('#rec').classList.toggle('on',i==1&&S.frozen);scrollTo({top:0})}
+$$('nav button').forEach((b,i)=>b.onclick=()=>show(i));
+/* audio: look-ahead scheduler, exact 60/bpm spacing, 880 Hz sine */
+let ac,nextT=0,tm,beats=[];
+function sched(){while(nextT<ac.currentTime+.12){const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(0,nextT);g.gain.linearRampToValueAtTime(.35,nextT+.005);g.gain.exponentialRampToValueAtTime(.001,nextT+.12);o.connect(g).connect(ac.destination);o.start(nextT);o.stop(nextT+.13);beats.push(nextT);nextT+=60/S.bpm}}
+function startM(){ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume();if(tm)return;S.metro=true;nextT=ac.currentTime+.05;tm=setInterval(sched,25);$('#mtt').textContent='Stop Audio Metronome Pacer'}
+function stopM(){clearInterval(tm);tm=null;S.metro=false;beats=[];$('#mtt').textContent='Resume Acoustic Pacer'}
+(function raf(){while(ac&&beats.length&&beats[0]<=ac.currentTime){beats.shift();const h=$('#hub');h.classList.add('p');setTimeout(()=>h.classList.remove('p'),90)}requestAnimationFrame(raf)})();
+$('#mt').onclick=()=>S.metro?stopM():startM();
+$('#pulse').onclick=()=>{startM();toast('Pacing pulse transmitting for 8 seconds.');setTimeout(()=>{if(!S.frozen)stopM()},8000)};
+$$('.pills button').forEach(b=>b.onclick=()=>{S.bpm=+b.dataset.b;$$('.pills button').forEach(x=>x.classList.toggle('on',x===b));$('#bpmv').textContent=S.bpm});
+/* speech */
+let speaking=false;
+function speak(t){if(!S.voice||!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t||$('#say').textContent.replace(/[“”]/g,''));u.rate=.85;u.pitch=.95;const v=speechSynthesis.getVoices().find(v=>/^en/i.test(v.lang)&&/female|samantha|google|natural/i.test(v.name));if(v)u.voice=v;u.onstart=()=>speaking=true;u.onend=()=>speaking=false;speechSynthesis.speak(u)}
+$('#vr').onclick=()=>{S.voice=true;speak()};
+$('#vp').onclick=()=>{S.voice=!S.voice;if(!S.voice&&'speechSynthesis' in window)speechSynthesis.cancel();$('#vp').innerHTML=S.voice?'<span class="ms">pause</span>Pause Audio':'<span class="ms">play_arrow</span>Voice On'};
+const w=$('#wave');for(let i=0;i<32;i++)w.append(document.createElement('i'));
+(function an(t){const on=speaking||S.metro||S.frozen;[...w.children].forEach((b,i)=>b.style.height=(on?8+40*Math.abs(Math.sin(t/190+i*.6))*Math.abs(Math.cos(t/430+i)):6)+'px');requestAnimationFrame(an)})(0);
+function setLaser(v){$('#lz').classList.toggle('on',v);$('#laser').classList.toggle('on',v);$('#lzt').textContent='Laser Line Projection ('+(v?'ON':'OFF')+')'}
+$('#lz').onclick=()=>setLaser(!$('#lz').classList.contains('on'));
+/* freeze + escalation. Uses the shared Escalation module; the Node server is authoritative when reachable. */
+let EP=null,mode='local',skew=0,lastStage=null,du;
+const NAME={sarah:'Sarah Vance',clinic:'Dr. Ahmed Ben Salah'},TEL={sarah:'+21698420115',clinic:'+21671850000',emergency:'190'};
+const STG={window:'Dismiss window',sarah:'Calling Sarah',clinic:'Calling clinic',emergency:'Emergency called'};
+async function api(p,m='POST',b){const r=await fetch(p,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined,signal:AbortSignal.timeout(1500)});if(!r.ok)throw 0;return r.json()}
+async function freeze(adopt){if(S.frozen)return;S.frozen=true;S.fi=2.8;S.cad=0;S.fz++;S.t0=adopt?adopt.t0:Date.now();
+ if(adopt){EP=adopt;mode='server'}else{try{const r=await api('/api/simulate/freeze');EP=r.episode;skew=r.now-Date.now();mode='server'}catch(e){EP=Escalation.start(Date.now(),{auto:S.auto});mode='local';skew=0}}
+ $('#bst').textContent='Biofeedback auto-engaged · Ankle band freeze trigger';$('#bst').style.color='var(--rose)';$('#bdot').style.background='var(--rose)';
+ $('#bd').textContent='Acute freezing episode detected by bilateral accelerometers. Sensory cueing activated automatically to help release the basal ganglia block.';$('#conf').textContent='96.4%';
+ du=setInterval(()=>$('#dur').textContent=((Date.now()-S.t0)/1000).toFixed(1)+'s',100);
+ lastStage=null;show(1);render();speak();startM();setLaser(true);epTick()}
+function onStage(st){
+ if(st==='sarah'||st==='clinic'){toast('No response yet. Calling '+NAME[st]+'…');setTimeout(()=>location.href='tel:'+TEL[st],500)}
+ if(st==='emergency'){if(S.auto){toast('The care circle did not answer. Calling emergency services (190).');setTimeout(()=>location.href='tel:190',500)}else toast('The care circle did not answer. Auto-dial is off, call 190 yourself.')}}
+function epTick(){if(!EP||EP.stage==='resolved')return;const now=Date.now()+skew;Escalation.advance(EP,now);const st=EP.stage;
+ if(st!==lastStage){lastStage=st;onStage(st)}
+ const left=Math.max(0,Math.ceil((EP.deadline-now)/1000)),em=st==='emergency';
+ $('#alertbar').classList.add('on');
+ $('#abt').innerHTML='<span class="ms f">warning</span> '+({window:'Calling your care circle in <b>'+left+'</b>s',sarah:'Calling Sarah Vance… <b>'+left+'</b>s',clinic:'Calling Dr. Ahmed… <b>'+left+'</b>s',emergency:'Emergency services called'})[st];
+ $('#ans').hidden=!(st==='sarah'||st==='clinic');
+ $('#rn').textContent=em?'190':left+'s';$('#rg').style.strokeDashoffset=em?0:94.2*(1-left/EP.total);$('#rt').textContent=STG[st];
+ $('#hs').textContent=em?'Dispatching emergency services…':'Automated Ambulance Dispatch'}
+setInterval(epTick,250);
+async function end(kind,msg){const was=EP;EP=null;S.ignore=Date.now()+3000;if(mode==='server'&&was){try{await api(kind==='answered'?'/api/escalation/answered':'/api/escalation/dismiss','POST',{by:was.stage})}catch(e){}}recover(msg)}
+function recover(msg){S.frozen=false;S.fi=.65;S.cad=104;clearInterval(du);const d=S.t0?((Date.now()-S.t0)/1000).toFixed(1):'—';EP=null;S.t0=0;stopM();setLaser(false);
+ $('#alertbar').classList.remove('on');$('#rn').textContent='45s';$('#rg').style.strokeDashoffset=0;$('#rt').textContent='Dismiss window';$('#hs').textContent='Automated Ambulance Dispatch';
+ $('#bst').textContent='Standby · Ankle band monitoring';$('#bst').style.color='var(--ter)';$('#bdot').style.background='var(--ter)';$('#rec').classList.remove('on');
+ LOG.unshift({t:'Now',tag:'Live demo',c:'p',fi:2.8,d:d,tr:'Demo freeze injected',cue:'Laser Line + '+S.bpm+' BPM Audio',res:'Recovery logged by patient'});renderLog();render();toast(msg)}
+const active=()=>EP&&EP.stage!=='resolved';
+$('#demo').onclick=()=>freeze();
+$('#rec').onclick=()=>end('dismiss','Recovery logged. Care circle notified.');
+$('#safe').onclick=$('#sd').onclick=()=>active()?end('dismiss','Logged as non-fall event. Alert dismissed.'):toast('No alert is active.');
+$('#ans').onclick=()=>end('answered','Care circle answered. Alert cancelled.');
+$('#sos').onclick=async()=>{let e;try{const r=await api('/api/sos');e=r.episode;skew=r.now-Date.now();mode='server'}catch(x){e=active()?EP:Escalation.start(Date.now());Object.assign(e,{stage:'emergency',deadline:Escalation.FAR,total:0});mode='local'}EP=e;lastStage=null;epTick()};
+$('#ad').onclick=e=>{S.auto=!S.auto;e.currentTarget.classList.toggle('on',S.auto);api('/api/settings','POST',{autoEmergency:S.auto}).catch(()=>{})};
+$('#sync').onclick=()=>toast('Band synced: 100 Hz stream verified.');
+$('#exp').onclick=()=>toast('FHIR packet prepared for Dr. Vance (demo).');
+/* levodopa plasma curve */
+function plasma(){const t=S.dosed,pts=[];for(let x=0;x<=400;x+=8){const c=t?Math.exp(-Math.pow((x-120)/150,2)*.9)*.9+.08:(x<110?.35+.5*Math.sin(x/110*Math.PI/2):.85*Math.exp(-(x-110)/170)+.02);pts.push([x,120-c*100])}
+ const d='M'+pts.map(p=>p.join(' ')).join(' L'),nx=t?150:230;
+ $('#pk').innerHTML=(t?'':'<rect x="250" y="0" width="150" height="130" fill="rgba(251,113,133,.1)"/>')+`<line x1="0" x2="400" y1="82" y2="82" stroke="#fb7185" stroke-dasharray="5 5" opacity=".6"/><path d="${d} L400 130 L0 130Z" fill="rgba(189,194,255,.12)"/><path d="${d}" fill="none" stroke="#bdc2ff" stroke-width="3"/><line x1="${nx}" x2="${nx}" y1="0" y2="130" stroke="#57f1db" stroke-dasharray="3 3"/><circle cx="${nx}" cy="${pts.find(p=>p[0]>=nx)[1]}" r="6" fill="#57f1db"/>`}
+$('#dose').onclick=()=>{S.dosed=true;$('#dt').textContent='Dose logged · 12:30 PM';$('#dt').style.color='var(--ter)';$('#dbox').style.background='#0b2a24';$('#dbox').style.borderColor='rgba(102,243,182,.3)';$('#sw').textContent='Protected window';$('#sw').style.color='var(--ter)';$('#pl').textContent='12:30 PM (Last Dose)';$('#pr').textContent='5:00 PM (Next Dose)';$('#pr').style.color='var(--mu)';$('#dose').innerHTML='<span class="ms">check</span>Dose logged';try{fetch('/api/meds/log',{method:'POST'})}catch(e){}plasma();toast('Levodopa dose logged.')};
+plasma();
+/* chronology */
+function bars(r){const d=r==7?[3,5,2,4,6,2,4]:[1,1,2,2,3,5,4,9,4,3,4,5,3,6,5,4,8,5,4,3,2,2,1,1];$('#bars').innerHTML=d.map((v,i)=>`<i class="${(r==24&&(i==7||i==16))||(r==7&&v>5)?'h':''}" style="height:${v*10}%"></i>`).join('');
+ $('#blbl').innerHTML=r==7?'<span>Mon</span><span>Wed</span><span>Sun</span>':'<span>00:00</span><span style="color:var(--rose)">● 07:50 (4.2s)</span><span>12:00</span><span style="color:var(--rose)">● 16:42 (2.8s)</span><span>23:59</span>';
+ $('#fzsub').textContent=r==7?'26 events this week, down 22%. Most cluster before scheduled doses.':'2 Brief Events: Both safely resolved via auditory metronome pacing cue.'}
+$$('[data-r]').forEach(b=>b.onclick=()=>{$$('[data-r]').forEach(x=>x.classList.toggle('on',x===b));bars(+b.dataset.r)});bars(24);
+/* FI trace */
+(function(){const X=h=>40+h/24*350,Y=v=>190-v*50,pk=[[7.6,1.8],[12.1,2.4],[16.7,2.9],[20.25,2.3]];let p='';for(let i=0;i<=192;i++){const h=i/8;let v=.28+.06*Math.sin(h*2);pk.forEach(([c,a])=>v+=a*Math.exp(-Math.pow((h-c)/.55,2)));p+=(i?'L':'M')+X(h).toFixed(1)+' '+Y(v).toFixed(1)}
+ let s=`<line x1="40" x2="390" y1="${Y(2)}" y2="${Y(2)}" stroke="#fb7185" stroke-dasharray="5 5"/><line x1="40" x2="390" y1="${Y(1.2)}" y2="${Y(1.2)}" stroke="#7dd3fc" stroke-dasharray="5 5"/>`;
+ [8,12.5,17,21.5].forEach(h=>s+=`<line x1="${X(h)}" x2="${X(h)}" y1="30" y2="190" stroke="#bdc2ff" stroke-dasharray="2 4" opacity=".6"/><circle cx="${X(h)}" cy="30" r="5" fill="#bdc2ff"/>`);
+ s+=`<path d="${p} L${X(24)} 190 L${X(0)} 190Z" fill="rgba(87,241,219,.1)"/><path d="${p}" fill="none" stroke="#57f1db" stroke-width="3" stroke-linejoin="round"/>`;
+ pk.forEach(([c,a])=>s+=`<circle cx="${X(c)}" cy="${Y(a+.3)}" r="5" fill="#fca5a5"/>`);
+ s+=`<rect x="${X(16.7)-70}" y="42" width="140" height="38" rx="8" fill="#31353f"/><text x="${X(16.7)}" y="58" text-anchor="middle" fill="#dfe2f0" font-size="11" font-family="JetBrains Mono" font-weight="700">FI 2.9 (PEAK)</text><text x="${X(16.7)}" y="73" text-anchor="middle" fill="#bacac5" font-size="10" font-family="JetBrains Mono">16:42:10 (-18m)</text>`;
+ ['00:00','06:00','12:00','18:00','24:00'].forEach((t,i)=>s+=`<text x="${40+i*87.5}" y="212" text-anchor="middle" fill="${i==2?'#bdc2ff':'#9fb0ab'}" font-size="11" font-family="JetBrains Mono">${t}</text>`);
+ $('#ch').innerHTML=s})();
+/* episode log */
+let LOG=[{t:'20:15:44',tag:'Post-Dusk',c:'i',fi:2.3,d:4.2,tr:'Nightstand Pivot (Turning Hesitation)',cue:'Dual-Band Haptic (3 Hz)',res:'Resolved within 2 gait cycles'},{t:'16:42:10',tag:'Pre-Dose -18m',c:'p',fi:2.9,d:7.4,tr:'180° Rapid Turn',cue:'Laser Line + 104 BPM Audio',res:'Cadence restored smoothly'},{t:'12:05:19',tag:'Pre-Dose -25m',c:'p',fi:2.4,d:5.1,tr:'Cognitive Dual-Task (Phone)',cue:'Left Shank Haptic Burst',res:'Stride asymmetry normalized'},{t:'07:35:02',tag:'Pre-Dose -25m',c:'p',fi:1.8,d:3.2,tr:'Doorway Threshold Narrowing',cue:'Bilateral Rhythmic Cue',res:'Prompt threshold crossing'}];
+let flt='all';
+function renderLog(){const L=LOG.filter(l=>flt=='all'||(flt=='sev'&&l.fi>=2.4)||(flt=='pre'&&l.c=='p'));
+ $('#log').innerHTML=L.map(l=>`<div class="inc"><div class="row" style="flex-wrap:wrap"><b style="font:600 17px var(--mono)"><span style="color:${l.c=='p'?'#fca5a5':'#bdc2ff'}">●</span> ${l.t}</b><span class="badge ${l.c=='p'?'r':'i'}">${l.tag}</span><span class="mu" style="font:500 12px var(--mono)">FI Peak: <span style="color:var(--rose)">${l.fi}</span> <span style="background:var(--s3);padding:3px 8px;border-radius:8px;color:var(--tx)">${l.d}s</span></span></div><div class="tr"><div><span>Trigger</span><b>${l.tr}</b></div><div><span>Autonomous Cue</span><b>${l.cue}</b></div></div><span class="badge g">✓ ${l.res}</span></div>`).join('')}
+$$('#flt button').forEach(b=>b.onclick=()=>{flt=b.dataset.f;$$('#flt button').forEach(x=>x.classList.toggle('on',x===b));renderLog()});renderLog();
+/* render + server polling with offline fallback */
+function render(){const f=S.frozen;document.body.classList.toggle('frozen',f);$('#cad').textContent=Math.round(S.cad);$('#fi').textContent=S.fi.toFixed(2);
+ $('#ring').style.strokeDashoffset=540-540*Math.min(S.cad/140,1)*.75;$('#ring').setAttribute('stroke',f?'#ffb4ab':'#57f1db');$('#dk').textContent=f?'⚠ Freezing Motor Arrest':'Nominal Locomotion';$('#sym').textContent=f?'Interrupted':'98.2%';$('#hz').textContent=S.fz}
+async function poll(){let ok=false;try{const d=await api('/api/dashboard/PT-1042','GET');ok=true;skew=d.now-Date.now();
+ if(!S.frozen){S.cad=d.cadence;S.fi=d.fi}S.fz=d.freezes_24h;const e=d.episode,live=e&&e.stage!=='resolved';
+ if(live&&!S.frozen&&Date.now()>(S.ignore||0))freeze(e);
+ else if(live&&S.frozen&&mode==='server'&&EP&&e.t0===EP.t0)EP=e;
+ else if(!live&&S.frozen&&mode==='server'&&e&&EP&&e.t0===EP.t0&&e.stage==='resolved')end('dismiss','Alert resolved elsewhere.')}catch(x){}
+ if(!ok&&!S.frozen){S.cad=104+Math.round((Math.random()-.5)*4);S.fi=+(0.65+(Math.random()-.5)*.1).toFixed(2)}
+ $('#live').textContent=ok?'Live':'Sim';render();setTimeout(poll,EP?1000:2500)}
+poll();
+</script></body></html>

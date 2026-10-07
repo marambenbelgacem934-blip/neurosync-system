@@ -1,0 +1,14 @@
+{
+  "name": "neurosync-companion",
+  "version": "1.0.0",
+  "description": "Ambulatory gait cueing companion and doctor portal hub",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "band": "node mock_band.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

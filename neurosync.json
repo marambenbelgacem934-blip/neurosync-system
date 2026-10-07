@@ -1,0 +1,394 @@
+{
+ "freezes": [
+  {
+   "time": "9:58:17 AM",
+   "duration": 8,
+   "peak_fi": "2.62",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:16 AM",
+   "duration": 8,
+   "peak_fi": "2.53",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:15 AM",
+   "duration": 8,
+   "peak_fi": "2.72",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:14 AM",
+   "duration": 8,
+   "peak_fi": "2.40",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:13 AM",
+   "duration": 8,
+   "peak_fi": "2.69",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:12 AM",
+   "duration": 8,
+   "peak_fi": "2.64",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:11 AM",
+   "duration": 8,
+   "peak_fi": "2.75",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:58:10 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:57:11 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:56:11 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:55:12 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:54:12 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:53:13 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:52:13 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:51:14 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:50:14 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:49:15 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:48:15 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:47:16 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:46:17 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:45:17 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:44:18 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:43:18 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:42:19 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:41:19 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:40:20 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:39:20 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:38:21 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:37:22 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:36:22 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:35:23 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:34:23 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:33:24 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:32:24 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:31:25 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:30:25 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:29:26 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:28:26 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:27:27 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:26:28 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:25:28 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:24:29 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:23:29 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:22:30 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:21:30 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:20:31 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:19:31 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:18:32 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:17:32 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:16:33 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:15:34 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:14:34 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:13:35 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:12:35 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  },
+  {
+   "time": "9:11:36 AM",
+   "duration": 8,
+   "peak_fi": "2.68",
+   "latency": 310,
+   "context": "Doorway Hesitation / Turning Block"
+  }
+ ],
+ "doses": [],
+ "notes": [],
+ "settings": {
+  "autoEmergency": true
+ }
+}
