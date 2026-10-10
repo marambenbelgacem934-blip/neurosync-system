@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NeuroSync-FOG, circuit 3D</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap">
+<style>
+:root{--bg:#eef2f6;--bg2:#d3dde8;--pn:#fff;--tx:#14202b;--mu:#586878;--ac:#0a6cd9;--acx:#fff;--bd:#d0d9e2;--bt:#e8edf3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d131a;--bg2:#1d2a38;--pn:#131b24;--tx:#e6edf3;--mu:#93a3b3;--ac:#4cc9f0;--acx:#06202b;--bd:#26323f;--bt:#1c2733}}
+:root[data-theme="dark"]{--bg:#0d131a;--bg2:#1d2a38;--pn:#131b24;--tx:#e6edf3;--mu:#93a3b3;--ac:#4cc9f0;--acx:#06202b;--bd:#26323f;--bt:#1c2733}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+#app{display:grid;grid-template-columns:minmax(0,1fr) 360px;height:100%}
+#v{position:relative;min-height:0;background:radial-gradient(circle at 50% 42%,var(--bg2),var(--bg) 78%)}
+#c{width:100%;height:100%;display:block;touch-action:none}
+#hud{position:absolute;left:12px;top:12px;padding:8px 12px;border-radius:8px;background:var(--pn);border:1px solid var(--bd);font-weight:600;font-variant-numeric:tabular-nums}
+#hud i{display:inline-block;width:10px;height:10px;border-radius:50%;background:#8893a0;margin:0 12px 0 5px;vertical-align:-1px}
+#hud i.on{background:#ff3b3b;box-shadow:0 0 10px #ff3b3b}
+#hint{position:absolute;left:12px;bottom:10px;color:var(--mu);font-size:12px}
+#p{overflow:auto;padding:18px;background:var(--pn);border-left:1px solid var(--bd)}
+h1{font-size:18px;margin:0 0 2px}
+h1+p{margin:0 0 6px;color:var(--mu);font-size:12.5px}
+h2{font-size:14px;margin:18px 0 6px;display:flex;justify-content:space-between;align-items:baseline}
+h2 span{color:var(--mu);font-weight:400;font-size:12.5px}
+.r{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button{font:inherit;font-weight:600;padding:7px 12px;border-radius:6px;border:1px solid var(--bd);background:var(--bt);color:var(--tx);cursor:pointer}
+button.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}
+input[type=number],select{font:inherit;width:66px;padding:5px 6px;border-radius:6px;border:1px solid var(--bd);background:var(--bt);color:var(--tx)}
+#sd{margin:0;min-height:44px}
+#ch{width:100%;height:112px;border:1px solid var(--bd);border-radius:6px;background:var(--bt);margin-top:8px}
+#ser{margin:8px 0 0;padding:10px;border-radius:6px;background:#0c1218;color:#b6e3c0;font:12px/1.45 "IBM Plex Mono",ui-monospace,Consolas,monospace;height:210px;overflow:hidden;white-space:pre}
+#tb{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:2px;padding:4px;border-radius:8px;background:var(--pn);border:1px solid var(--bd)}
+#tb button{border:0;background:none;padding:6px 10px;font-weight:400;white-space:nowrap}#tb button:hover{background:var(--bt)}
+.co{position:absolute;left:0;top:0;display:none;pointer-events:none;padding:2px 8px;border-radius:5px;background:var(--pn);border:1px solid var(--bd);font-size:12px;font-weight:600;white-space:nowrap}
+#wt{width:100%;border-collapse:collapse;font-size:12.5px}#wt td{padding:5px 6px;border-top:1px solid var(--bd)}
+#wt i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;vertical-align:-1px;box-shadow:0 0 0 1px var(--bd)}
+@media(max-width:820px){#hint{display:none}#app{grid-template-columns:1fr;grid-template-rows:46% 1fr}#p{border-left:0;border-top:1px solid var(--bd)}}
+</style></head><body>
+<div id="app">
+<div id="v"><canvas id="c"></canvas><div id="hud"></div><div id="hint">Glisser pour tourner, molette pour zoomer</div><div id="tb"><button data-v="0">Vue d’ensemble</button><button data-v="1">Dessus</button><button data-v="2">MPU-6050</button><button data-v="3">ESP32</button><button data-v="4">Batterie et moteur</button><button id="tg">Étiquettes</button></div></div>
+<aside id="p">
+<h1>NeuroSync-FOG, wearable en 3D</h1>
+<p>ESP32, MPU-6050, LED, buzzer, moteur vibrant et batterie LiPo. Le sketch tourne ici à l'identique (SIMULATE = 1, 100 Hz, arrêt à 60 s).</p>
+<h2>Montage <span id="sl"></span></h2>
+<p id="sd"></p>
+<div class="r"><button id="bp">◀ Précédent</button><button id="bn">Suivant ▶</button><button id="ba">Rejouer</button></div>
+<h2>Simulation du sketch</h2>
+<div class="r"><button id="go" class="pri">▶ Démarrer</button><button id="rs">Reset</button><select id="sp" aria-label="Vitesse"><option value="1">×1<option value="5">×5<option value="20">×20</select><label><input type="checkbox" id="snd" checked> Son</label></div>
+<div class="r">Cue de <input id="cs" type="number" value="23" step="0.5"> à <input id="ce" type="number" value="31" step="0.5"> s<span style="flex:1"></span>Série <button id="s1">'1'</button><button id="s0">'0'</button></div>
+<canvas id="ch" width="640" height="224"></canvas>
+<h2>Moniteur série <span id="nl"></span></h2>
+<pre id="ser"></pre><h2>Câblage</h2><table id="wt"></table>
+</aside></div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const $=i=>document.getElementById(i),T=THREE,PI=Math.PI;
+const sc=new T.Scene(),c=$('c'),vw=$('v');
+const rd=new T.WebGLRenderer({canvas:c,antialias:true,alpha:true});rd.setPixelRatio(Math.min(devicePixelRatio,2));rd.shadowMap.enabled=true;rd.shadowMap.type=T.PCFSoftShadowMap;rd.toneMapping=T.ACESFilmicToneMapping;rd.toneMappingExposure=.8;rd.outputEncoding=T.sRGBEncoding;
+const cam=new T.PerspectiveCamera(38,1,.1,200);cam.position.set(1,15,17);
+const ctl=new T.OrbitControls(cam,c);ctl.target.set(1.5,0,.5);ctl.enableDamping=true;ctl.maxPolarAngle=1.5;
+function fit(){const w=vw.clientWidth,h=vw.clientHeight;rd.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',fit);fit();cam.position.multiplyScalar(Math.max(1,1.3/cam.aspect));
+sc.add(new T.HemisphereLight(0xffffff,0x4a5a6a,.3));
+const dl=new T.DirectionalLight(0xffffff,.85);dl.position.set(7,16,9);dl.castShadow=true;dl.shadow.mapSize.set(2048,2048);Object.assign(dl.shadow.camera,{left:-14,right:14,top:12,bottom:-12,near:1,far:45});sc.add(dl);dl.shadow.bias=-.0004;dl.shadow.radius=3;
+(()=>{const es=new T.Scene();es.add(new T.Mesh(new T.SphereGeometry(50,32,16),new T.MeshBasicMaterial({color:0x8a97a6,side:T.BackSide})));
+[[0,30,0,40,2,40,6],[-30,12,10,2,14,30,3],[30,8,-10,2,14,30,2.2],[0,10,-35,40,14,2,1.6]].forEach(([x,y,z,w,h,d,i])=>{const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshBasicMaterial({color:new T.Color(i,i,i)}));m.position.set(x,y,z);es.add(m)});
+const pm=new T.PMREMGenerator(rd);sc.environment=pm.fromScene(es,.02).texture;pm.dispose()})();
+const gnd=new T.Mesh(new T.PlaneGeometry(80,80),new T.ShadowMaterial({opacity:.34}));gnd.rotation.x=-PI/2;gnd.position.y=-.51;gnd.receiveShadow=true;sc.add(gnd);
+
+const M=(col,o)=>new T.MeshStandardMaterial(Object.assign({color:col,roughness:.55,metalness:.1},o));
+const mesh=(g,m,x,y,z,p)=>{const o=new T.Mesh(g,m);o.position.set(x,y,z);(p||sc).add(o);return o};
+const bx=(w,h,d,m,x,y,z,p)=>mesh(new T.BoxGeometry(w,h,d),m,x,y,z,p);
+const cy=(r,h,m,x,y,z,p,rz)=>{const o=mesh(new T.CylinderGeometry(r,r,h,28),m,x,y,z,p);if(rz)o.rotation.z=PI/2;return o};
+const mt=M(0xc9ced6,{metalness:.9,roughness:.28}),gold=M(0xd4af37,{metalness:.9,roughness:.3}),blk=M(0x15171c,{roughness:.6}),wht=M(0xf2f2f2);
+function tag(txt,x,y,z,w,h,col,p){const k=document.createElement('canvas');k.width=512;k.height=Math.round(512*h/w);const g=k.getContext('2d');g.fillStyle=col;g.font='700 '+k.height*.6+'px system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,256,k.height/2);const o=mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:new T.CanvasTexture(k),transparent:true,depthWrite:false,toneMapped:false}),x,y,z,p);o.rotation.x=-PI/2;return o}
+const G=[];let mb,lm,ll,bz;const rings=[];
+const part=(s,fn)=>{const g=new T.Group();fn(g);sc.add(g);G.push({o:g,s,p:0})};
+
+part(0,g=>{const rr=(w,d,r)=>{const s=new T.Shape(),x=-w/2,y=-d/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+d-r);s.quadraticCurveTo(x+w,y+d,x+w-r,y+d);s.lineTo(x+r,y+d);s.quadraticCurveTo(x,y+d,x,y+d-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);return s};
+mesh(new T.ExtrudeGeometry(rr(18,11,.9),{depth:.38,bevelEnabled:true,bevelThickness:.06,bevelSize:.06,bevelSegments:3}),M(0x1b222b,{roughness:.42,metalness:.35}),1.5,-.06,.5,g).rotation.x=PI/2;
+[[-6.8,-4.4],[9.8,-4.4],[-6.8,5.4],[9.8,5.4]].forEach(([x,z])=>cy(.22,.08,gold,x,.04,z,g));
+tag('NeuroSync-FOG',-2.8,.05,-3.9,6,.9,'#e8eef5',g);tag('wearable de repérage du freezing',-2.8,.05,-3.1,5.4,.4,'#8fa3b8',g)});
+part(1,g=>{g.position.set(2.5,0,0);const pcb=M(0x101820,{roughness:.5});
+bx(2.8,.1,5.4,pcb,0,.45,0,g);[[-1.2,-2.5],[1.2,-2.5],[-1.2,2.5],[1.2,2.5]].forEach(([x,z])=>cy(.1,.4,mt,x,.2,z,g));
+bx(1.8,.22,2.3,mt,0,.62,-.6,g);tag('ESP32',0,.74,-.6,1.5,.45,'#2b3440',g);
+bx(1.8,.02,1,blk,0,.51,-2.1,g);for(let i=0;i<4;i++)bx(1.4,.02,.06,wht,0,.525,-2.4+i*.22,g);
+bx(.8,.3,.8,mt,0,.65,2.35,g);[-.9,.9].forEach(x=>cy(.17,.16,wht,x,.58,1.7,g));
+bx(.5,.14,.5,blk,0,.57,.95,g);bx(.12,.04,.12,M(0xff2a2a,{emissive:0xff2a2a,emissiveIntensity:1}),.5,.52,1.55,g);
+for(let s=-1;s<=1;s+=2){bx(.25,.2,3.9,blk,s*1.27,.6,0,g);for(let i=0;i<15;i++)bx(.08,.5,.08,gold,s*1.27,.75,-1.78+i*.254,g)}});
+part(2,g=>{g.position.set(8.2,0,.2);mb=new T.Group();g.add(mb);
+bx(1.6,.08,2.1,M(0x1c4fb8,{roughness:.4}),0,.5,0,mb);bx(.5,.1,.5,blk,.1,.59,0,mb);tag('MPU-6050',.15,.545,.7,1.1,.28,'#fff',mb);
+bx(.25,.18,2.1,blk,-.7,.58,0,mb);for(let k=0;k<8;k++)bx(.08,.7,.08,gold,-.7,.75,(k-3.5)*.254,mb)});
+part(3,g=>{const y=.5,x=-1.9,z=-1.2;cy(.22,1,M(0xd8b98a,{roughness:.6}),x,y,z,g,1);
+[[-.32,0xcc1f1f],[-.16,0xcc1f1f],[0,0x6b3a1e],[.34,0xd4af37]].forEach(([d,col])=>cy(.235,.07,M(col),x+d,y,z,g,1));
+cy(.03,2,mt,x,y,z,g,1);cy(.03,.5,mt,-2.9,.25,z,g);cy(.03,.5,mt,-.9,.25,z,g);tag('220 Ω',x,.04,z+.7,1.1,.4,'#e8eef5',g)});
+part(4,g=>{g.position.set(-4.8,0,-1.2);lm=M(0xc81414,{emissive:0xff1a1a,emissiveIntensity:.05,transparent:true,opacity:.92,roughness:.15});
+cy(.03,.7,mt,.13,.35,0,g);cy(.03,.5,mt,-.13,.25,0,g);cy(.37,.08,lm,0,.75,0,g);cy(.3,.5,lm,0,1,0,g);mesh(new T.SphereGeometry(.3,24,12,0,PI*2,0,PI/2),lm,0,1.25,0,g);
+ll=new T.PointLight(0xff2a2a,0,9);ll.position.set(0,1.5,0);g.add(ll);tag('LED, GPIO25',0,.04,.9,2.4,.4,'#e8eef5',g)});
+part(5,g=>{g.position.set(-3.2,0,2.2);bz=new T.Group();g.add(bz);
+cy(1,.8,M(0x16181d,{roughness:.4}),0,1.1,0,bz);cy(.13,.03,wht,0,1.5,0,bz);
+cy(.03,.8,mt,.38,.4,0,g);cy(.03,.7,mt,-.38,.35,0,g);
+for(let i=0;i<3;i++){const r=mesh(new T.TorusGeometry(.9,.03,8,48),new T.MeshBasicMaterial({color:0x4cc9f0,transparent:true,opacity:0}),0,1.56,0,g);r.rotation.x=PI/2;rings.push(r)}
+tag('Buzzer, GPIO26',0,.04,1.7,3,.4,'#e8eef5',g)});
+
+function wire(s,col,a,b,lift){const A=new T.Vector3(...a),B=new T.Vector3(...b),U=new T.Vector3(0,.5,0),mid=A.clone().lerp(B,.5);mid.y+=lift;
+const cv=new T.CatmullRomCurve3([A,A.clone().add(U),mid,B.clone().add(U),B]);
+const m=M(col,{roughness:.4,emissive:col,emissiveIntensity:0});const o=mesh(new T.TubeGeometry(cv,60,.07,8),m,0,0,0);G.push({o,s,p:0,w:1});const cn=new T.Group();[a,b].forEach(q=>{if(q[1]===1)bx(.24,.55,.24,blk,q[0],.9,q[2],cn)});if(cn.children.length){sc.add(cn);G.push({o:cn,s,p:0})}return m}
+const L=i=>[1.23,1,-1.78+.254*i],R=i=>[3.77,1,-1.78+.254*i],Mp=k=>[7.5,1,.2+(k-3.5)*.254];
+wire(6,'#d62828',R(14),Mp(7),2.2);wire(6,'#16181d',R(13),Mp(6),1.5);
+const wSDA=wire(7,'#2ec4b6',R(4),Mp(4),1.1),wSCL=wire(7,'#9bdc3c',R(1),Mp(5),1.7);
+const wC=[wire(8,'#ff9f1c',L(7),[-.9,.5,-1.2],1),wire(8,'#ff9f1c',[-2.9,.5,-1.2],[-4.67,.35,-1.2],.8),wire(8,'#f6d743',L(8),[-2.82,.35,2.2],2)];
+wire(8,'#202328',[-4.93,.25,-1.2],[-6.4,.5,-.6],.8);wire(8,'#202328',[-3.58,.35,2.2],[-6.4,.5,.7],1.2);wire(8,'#202328',[-6.4,.5,2],L(13),2.2);
+const E=G[1].o,smd=M(0xb59a6a,{roughness:.6}),rm=M(0xd8b98a,{roughness:.6});
+bx(.6,.14,.05,blk,0,.65,2.77,E);bx(.45,.08,.45,blk,.75,.54,1.15,E);
+[[-1,.8],[-.75,.75],[1,.8],[.55,.7],[-1,1.3],[-.55,1.55],[.5,.8],[-.5,.8]].forEach(([x,z],i)=>bx(.14,.06,.08,i%2?smd:blk,x,.52,z,E));
+[-.9,.9].forEach(x=>bx(.5,.1,.5,mt,x,.54,1.7,E));tag('ESP-WROOM-32',0,.74,-.15,1.5,.18,'#68727e',E);
+bx(.1,.04,.12,M(0x7cfc00,{emissive:0x39ff14,emissiveIntensity:1.4}),.55,.56,-.8,mb);bx(.3,.08,.2,blk,.5,.56,-.4,mb);
+[[.55,.1],[.6,.3],[.2,-.6]].forEach(([x,z])=>bx(.12,.06,.08,smd,x,.55,z,mb));
+[[.62,.9],[.62,-.9]].forEach(([x,z])=>cy(.09,.1,M(0x0a1020),x,.5,z,mb));
+[-1,1].forEach(s=>{const m=mesh(new T.SphereGeometry(.26,16,12),rm,-1.9+s*.5,.5,-1.2,G[3].o);m.scale.x=.55});
+const gk=document.createElement('canvas');gk.width=gk.height=128;const gx=gk.getContext('2d'),gr2=gx.createRadialGradient(64,64,0,64,64,64);gr2.addColorStop(0,'rgba(255,90,70,.95)');gr2.addColorStop(.35,'rgba(255,40,40,.35)');gr2.addColorStop(1,'rgba(255,0,0,0)');gx.fillStyle=gr2;gx.fillRect(0,0,128,128);
+const glow=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(gk),blending:T.AdditiveBlending,transparent:true,depthWrite:false,opacity:0,toneMapped:false}));glow.scale.set(3.6,3.6,1);glow.position.set(0,1.1,0);G[4].o.add(glow);
+const gb=G.length;part(8,g=>{bx(.7,.4,4.4,blk,-6.4,.2,.7,g);[-.6,.7,2,2.65].forEach(z=>{cy(.17,.08,mt,-6.4,.44,z,g);bx(.22,.02,.04,blk,-6.4,.49,z,g)})});
+let mo;const mr=[],wM=[];
+const red=M(0xcc1f1f),gm=G.length;part(9,g=>{const rs=M(0xd8b98a,{roughness:.6});
+cy(.2,.9,rs,7.9,.5,2.2,g,1);[[-.28,0x6b3a1e],[-.1,0x16181d],[.08,0xcc1f1f],[.3,0xd4af37]].forEach(([d,c])=>cy(.205,.07,M(c),7.9+d,.5,2.2,g,1));
+cy(.03,1.4,mt,7.9,.5,2.2,g,1);cy(.03,.5,mt,7.2,.25,2.2,g);cy(.03,.5,mt,8.6,.25,2.2,g);
+cy(.3,.7,blk,9.4,.5,2.7,g);[9.1,9.4,9.7].forEach(x=>bx(.06,.06,.5,mt,x,.4,2.45,g));tag('2N2222',9.4,.86,2.7,.55,.2,'#aab4c0',g);
+cy(.03,1,mt,9,.5,3.4,g,1);cy(.12,.5,M(0xe9a23b,{roughness:.2}),9,.5,3.4,g,1);cy(.125,.08,blk,8.8,.5,3.4,g,1);
+bx(.08,.08,.55,red,8.5,.4,3.67,g);bx(.08,.08,.55,blk,9.5,.4,3.67,g);
+mo=new T.Group();mo.position.set(9,0,4.7);g.add(mo);cy(.75,.4,mt,0,.25,0,mo);cy(.6,.03,blk,0,.46,0,mo);tag('ERM',0,.49,0,.9,.35,'#aab4c0',mo);
+for(let i=0;i<2;i++){const r=mesh(new T.TorusGeometry(.8,.03,8,48),new T.MeshBasicMaterial({color:0xffb703,transparent:true,opacity:0}),0,.5,0,mo);r.rotation.x=PI/2;mr.push(r)}
+tag('Moteur, GPIO27',8.9,.04,5.75,2.6,.4,'#e8eef5',g)});
+wM.push(wire(9,'#c77dff',R(10),[7.2,.5,2.2],1.3),wire(9,'#c77dff',[8.6,.5,2.2],[9.1,.5,2.2],.5),wire(9,'#4895ef',[9.4,.5,2.2],[9.5,.45,3.4],.9));
+wire(9,'#202328',R(12),[9.7,.5,2.2],1.5);
+const gp=G.length;part(10,g=>{[[-1.1,3.7],[.7,3.7],[-1.1,5.3],[.7,5.3]].forEach(([x,z])=>cy(.1,.2,mt,x,.1,z,g));
+bx(2.2,.1,1.7,M(0x6a1fb0,{roughness:.4}),-.2,.25,4.5,g);bx(.9,.28,.7,mt,-.2,.44,5.15,g);bx(.7,.08,.7,blk,-.4,.33,4.2,g);
+bx(.12,.05,.12,M(0xff2a2a,{emissive:0xff2a2a,emissiveIntensity:1}),-.95,.31,4.3,g);bx(.12,.05,.12,M(0x7cfc00,{emissive:0x39ff14,emissiveIntensity:1.4}),-.95,.31,4.6,g);
+tag('TP4056',-.2,.32,4.85,1.3,.3,'#e8eef5',g);[[.3,3.8],[-.7,3.8],[.8,4.2],[.8,4.8]].forEach(([x,z])=>cy(.08,.06,gold,x,.33,z,g));
+bx(1.4,.4,.55,blk,2.4,.25,3.75,g);bx(.35,.18,.4,wht,2.4,.52,3.75,g);
+bx(3.6,.5,2.2,M(0x2f4a7a,{roughness:.35,metalness:.2}),5.3,.25,4.5,g);bx(3.1,.02,1.5,M(0xe8e2d0),5.3,.51,4.5,g);tag('LiPo 3,7 V  500 mAh',5.3,.53,4.5,2.9,.5,'#2b3440',g);
+bx(.2,.08,.08,red,3.4,.3,4.2,g);bx(.2,.08,.08,blk,3.4,.3,4.8,g);tag('Alimentation LiPo',5.3,.04,5.8,3,.35,'#e8eef5',g)});
+wire(10,'#d62828',[3.3,.4,4.2],[.8,.5,4.2],1.1);wire(10,'#202328',[3.3,.4,4.8],[.8,.5,4.8],.6);
+wire(10,'#d62828',[.3,.5,3.8],[1.9,.5,3.75],.8);wire(10,'#d62828',[2.9,.5,3.75],L(14),1.2);
+wM.push(wire(10,'#d62828',[2.9,.5,3.75],[8.5,.45,3.4],2.2));wire(10,'#202328',[-.7,.5,3.8],[-6.4,.5,2.65],1.4);
+const CO=[['ESP32 DevKit',[2.5,1.5,-.6],1],['MPU-6050',[8.2,1.8,.2],2],['Résistance 220 Ω',[-1.9,1.2,-1.2],3],['LED rouge',[-4.8,2,-1.2],4],['Buzzer',[-3.2,2.2,2.2],5],['Borne GND',[-6.4,.9,.7],gb],['Moteur vibrant',[9,1.5,4.7],gm],['Batterie LiPo',[5.3,1.1,4.5],gp],['Chargeur TP4056',[-.2,1,4.5],gp]].map(([t,p,g])=>{const e=document.createElement('div');e.className='co';e.textContent=t;vw.appendChild(e);return{e,v:new T.Vector3(...p),g}});
+let lab=true,goal;$('tg').onclick=()=>lab=!lab;
+function callouts(){const W=vw.clientWidth,H=vw.clientHeight;CO.forEach(o=>{const q=o.v.clone().project(cam),ok=lab&&G[o.g].p>.95&&q.z<1;o.e.style.display=ok?'block':'none';if(ok)o.e.style.transform='translate('+(q.x+1)/2*W+'px,'+(1-q.y)/2*H+'px) translate(-50%,-130%)'})}
+const V=[[[1,15,17],[1.5,0,.5]],[[1.5,26,.1],[1.5,0,.5]],[[10.5,5.5,6.5],[8.2,.6,.2]],[[5.5,6,9],[2.5,.5,0]],[[6.5,8,12],[4.5,.3,3.6]]];
+document.querySelectorAll('#tb [data-v]').forEach(b=>b.onclick=()=>{const v=V[b.dataset.v];goal={p:new T.Vector3(...v[0]),t:new T.Vector3(...v[1])};ctl.autoRotate=false});
+ctl.addEventListener('start',()=>{goal=null;ctl.autoRotate=false});
+$('wt').innerHTML=[['#d62828','3V3','VCC du MPU-6050'],['#202328','GND (droite)','GND du MPU-6050'],['#2ec4b6','GPIO21','SDA'],['#9bdc3c','GPIO22','SCL'],['#ff9f1c','GPIO25','220 Ω puis LED'],['#f6d743','GPIO26','Buzzer +'],['#202328','GND (gauche)','Borne GND (LED −, buzzer −, TP4056 OUT −)'],['#c77dff','GPIO27','1 kΩ puis base du 2N2222'],['#4895ef','Collecteur 2N2222','Moteur −'],['#202328','GND (droite)','Émetteur 2N2222'],['#d62828','VIN','Sortie interrupteur (batterie +)'],['#d62828','Sortie interrupteur','Moteur + (diode 1N4148 en parallèle)'],['#d62828','TP4056 B+ / B−','Batterie LiPo 3,7 V']].map(r=>'<tr><td><i style="background:'+r[0]+'"></i>'+r[1]+'</td><td>'+r[2]+'</td></tr>').join('');
+const ar=new T.ArrowHelper(new T.Vector3(0,1,0),new T.Vector3(8.5,1.3,.2),2,0x4cc9f0,.5,.3);sc.add(ar);
+sc.traverse(o=>{if(o.isMesh&&!o.material.transparent)o.castShadow=o.receiveShadow=true});
+
+const ST=[['Plateau porteur','base du wearable avec vis et sérigraphie.'],['ESP32 DevKit','le microcontrôleur, USB vers le bas, 15 broches de chaque côté.'],['MPU-6050 (GY-521)','accéléromètre I²C à l’adresse 0x68, plage ±2 g.'],['Résistance 220 Ω','en série avec la LED pour limiter le courant.'],['LED rouge','cue visuel, allumée pendant le gel de la marche.'],['Buzzer','cue sonore, piloté avec la LED.'],['Alimentation','3V3 vers VCC (rouge), GND vers GND (noir).'],['Bus I²C','SDA vers GPIO21 (turquoise), SCL vers GPIO22 (vert).'],['Sorties du cue','GPIO25 vers résistance et LED, GPIO26 vers buzzer, masses communes.'],['Moteur vibrant','moteur à pastille 3 V commandé par GPIO27 via une résistance 1 kΩ et un transistor NPN 2N2222, avec une diode 1N4148 en parallèle du moteur. Il vibre avec la LED et le buzzer.'],['Batterie et alimentation','LiPo 3,7 V avec module de charge TP4056 (USB-C), interrupteur, sortie vers VIN et masse commune. Circuit terminé.']];
+let step=0,au;
+function setStep(n){step=Math.max(0,Math.min(10,n));$('sl').textContent='étape '+(step+1)+' sur 11';$('sd').innerHTML='<b>'+ST[step][0]+'</b> : '+ST[step][1]}
+const stopAuto=()=>clearInterval(au);
+function play(){stopAuto();setStep(0);au=setInterval(()=>{if(step>=10){stopAuto();ctl.autoRotate=true;ctl.autoRotateSpeed=.6}else setStep(step+1)},1000)}
+$('bp').onclick=()=>{stopAuto();setStep(step-1)};$('bn').onclick=()=>{stopAuto();setStep(step+1)};$('ba').onclick=play;
+
+let S,run=0,spd=1,clk=0,ac,gn;
+function reset(){S={ms:0,nx:0,cue:false,out:[],n:0,halt:false,st:0,t:0,az:9.8,buf:[],cb:[]};run=0;$('go').textContent='▶ Démarrer';$('ser').textContent=''}
+function log(s){S.out.push(s);if(S.out.length>13)S.out.shift();S.n++}
+function tick(){const now=S.nx;S.nx+=10;const t=now/1000;S.t=t;const a=+$('cs').value,b=+$('ce').value;
+if(t>=a&&t<b)S.cue=true;else if(t>=b&&t<b+.05)S.cue=false;
+if(t>60){S.halt=true;return}
+const w=3*Math.sin(2*PI*1.8*t),f=t>=20&&t<30,az=9.8+(f?.3*w+1.5*Math.sin(2*PI*5.5*t):w);S.az=az;
+S.buf.push(az);S.cb.push(S.cue?1:0);if(S.buf.length>600){S.buf.shift();S.cb.shift()}
+log(t.toFixed(2)+',0.000,0.000,'+az.toFixed(3))}
+function aud(){try{ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();gn=ac.createGain();o.type='square';o.frequency.value=2600;gn.gain.value=0;o.connect(gn);gn.connect(ac.destination);o.start()}catch(e){}}
+$('go').onclick=()=>{stopAuto();if(S.halt)reset();setStep(10);if(!ac)aud();if(ac&&ac.resume)ac.resume();run=run?0:1;
+if(run&&!S.st){S.st=1;log('NeuroSync-FOG started');log('timestamp,ax,ay,az')}$('go').textContent=run?'⏸ Pause':'▶ Reprendre'};
+$('rs').onclick=reset;$('sp').onchange=e=>spd=+e.target.value;
+$('s1').onclick=()=>{if(!S.halt)S.cue=true};$('s0').onclick=()=>{if(!S.halt)S.cue=false};
+
+function chart(){const q=$('ch'),g=q.getContext('2d'),W=q.width,H=q.height,n=S.buf.length,X=i=>i*W/600,Y=v=>H-(v-5)/10*H;g.clearRect(0,0,W,H);
+g.lineWidth=1;g.strokeStyle='rgba(128,140,155,.55)';g.beginPath();g.moveTo(0,Y(9.8));g.lineTo(W,Y(9.8));g.stroke();
+g.fillStyle='rgba(255,59,59,.24)';for(let i=0;i<n;i++)if(S.cb[i])g.fillRect(X(i),0,X(1)+1,H);
+g.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--ac');g.lineWidth=2.5;g.beginPath();
+for(let i=0;i<n;i++)i?g.lineTo(X(i),Y(S.buf[i])):g.moveTo(X(i),Y(S.buf[i]));g.stroke();
+g.fillStyle='#8b9bab';g.font='20px system-ui,sans-serif';g.fillText('az en m/s², 6 s glissantes, zone rouge = cue actif',8,24)}
+
+const ck=new T.Clock();
+function frame(){requestAnimationFrame(frame);const dt=Math.min(ck.getDelta(),.1);clk+=dt;
+if(run&&!S.halt){S.ms+=dt*1000*spd;while(S.nx<=S.ms&&!S.halt)tick()}
+if(S.halt&&run){run=0;$('go').textContent='↺ Rejouer'}
+G.forEach(g=>{g.p+=((step>=g.s?1:0)-g.p)*Math.min(1,dt*5);g.o.visible=g.p>.01;if(g.w)g.o.geometry.setDrawRange(0,(g.o.geometry.index.count*g.p)|0);else g.o.position.y=(1-g.p)*6});
+const on=S.cue,act=run&&!S.halt;
+lm.emissiveIntensity+=((on?2.4:.05)-lm.emissiveIntensity)*Math.min(1,dt*20);ll.intensity=(lm.emissiveIntensity-.05)*1.6;glow.material.opacity=Math.min(1,(lm.emissiveIntensity-.05)/2.2);
+rings.forEach((r,i)=>{const ph=(clk*1.4+i/3)%1;r.scale.setScalar(1+ph*1.5);r.material.opacity=on?(1-ph)*.8:0});bz.position.x=on?Math.sin(clk*110)*.02:0;
+mb.position.y=(S.az-9.8)*.045;mb.rotation.z=(S.az-9.8)*.01;
+ar.visible=G[2].p>.9;ar.setLength(Math.max(.3,S.az*.2),.5,.3);ar.setColor(on?0xff4d4d:0x4cc9f0);
+wSDA.emissiveIntensity=act?.45+.45*Math.sin(clk*34):0;wSCL.emissiveIntensity=act?.45+.45*Math.cos(clk*34):0;wC.forEach(m=>m.emissiveIntensity=on?1:0);wM.forEach(m=>m.emissiveIntensity=on?1:0);mo.position.set(9+(on?Math.sin(clk*140)*.035:0),0,4.7+(on?Math.cos(clk*170)*.03:0));mr.forEach((r,i)=>{const ph=(clk*2.2+i/2)%1;r.scale.setScalar(1+ph*1.1);r.material.opacity=on?(1-ph)*.7:0});
+if(gn)gn.gain.setTargetAtTime(on&&$('snd').checked?.04:0,ac.currentTime,.01);
+$('hud').innerHTML='t = '+S.t.toFixed(2)+' s<i class="'+(on?'on':'')+'" style="margin-left:14px"></i>LED 25<i class="'+(on?'on':'')+'"></i>Buzzer 26<i class="'+(on?'on':'')+'"></i>Moteur 27'+(S.halt?' &nbsp;fin du sketch à 60 s':'');
+$('ser').textContent=S.out.join('\n');$('nl').textContent=S.n+' lignes, 115200 bauds';chart();if(goal){cam.position.lerp(goal.p,.07);ctl.target.lerp(goal.t,.07);if(cam.position.distanceTo(goal.p)<.05)goal=null}ctl.update();callouts();rd.render(sc,cam)}
+reset();matchMedia('(prefers-reduced-motion:reduce)').matches?setStep(8):play();frame();
+</script></body></html>

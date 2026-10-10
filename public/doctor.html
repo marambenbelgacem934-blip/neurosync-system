@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ParkinsonCare – Tableau de bord</title>
+<title>NEUROSYNC – Dashboard</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -118,20 +118,21 @@ body.vp main{grid-template-columns:minmax(0,1fr)}body.vp .right{display:none}
 <linearGradient id="gp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b87"/><stop offset="1" stop-color="#ffb3c1"/></linearGradient></defs></svg>
 
 <div class="sb">
- <div class="logo"><i data-i="brain"></i><div><b>Parkinson<span>Care</span></b><small>Suivi ambulatoire<br>Meilleur demain</small></div></div>
+ <div class="logo"><i data-i="brain"></i><div><b>NEUROSYNC<span>Care</span></b><small>Suivi ambulatoire<br>Meilleur demain</small></div></div>
  <nav><a class="on"><i data-i="home"></i>Tableau de bord</a><a data-v="hist"><i data-i="clock"></i>Historique</a><a data-v="trt"><i data-i="pill"></i>Traitement</a><a data-v="rep"><i data-i="file"></i>Rapport médecin</a><a data-v="pro"><i data-i="user"></i>Profil patient</a><small class="nl">Espace médecin</small><a data-v="pts"><i data-i="users"></i>Patients</a></nav>
  <canvas id="cvs"></canvas>
  <p class="tag">Technologie au service<br>de votre mobilité</p>
+ 
  <svg class="wv" viewBox="0 0 200 30"><path d="M0 15q10-12 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0 20 0" fill="none" stroke="#4d9bff" stroke-width="1.5"/></svg>
- <div class="foot"><a data-m><i data-i="gear"></i>Paramètres</a><a data-m><i data-i="power"></i>Déconnexion</a></div>
+ <div class="foot"><a data-ns href="patient.html" target="_blank" rel="noopener"><span class="ns-dot"></span>Application patient</a><a data-m><i data-i="gear"></i>Paramètres</a><a data-m><i data-i="power"></i>Déconnexion</a></div>
 </div>
 
 <main>
 <div class="top">
  <div class="av"><i data-i="user" style="width:30px;height:30px"></i></div>
- <div><span class="hi">Bonjour,</span><h1>Ahmed Ben Ali</h1><p>Patient ID : PK-00123 &nbsp;|&nbsp; Suivi depuis le 01/10/2026</p></div>
+ <div><span class="hi"></span><h1>Ahmed Ben Ali</h1><p>Patient ID : PK-00123 &nbsp;|&nbsp; Suivi depuis le 08/10/2026</p></div>
  <div class="sp"></div>
- <label class="date"><i data-i="cal"></i><select id="rg"><option>01/10/2026 - 07/10/2026</option><option>24/09/2026 - 30/09/2026</option></select><i data-i="chev"></i></label>
+ <label class="date"><i data-i="cal"></i><select id="rg"><option>08/10/2026 - 15/10/2026</option><option>24/09/2026 - 30/09/2026</option></select><i data-i="chev"></i></label>
  <button class="bell" id="bl" aria-label="Notifications"><i data-i="bell"></i><span class="bd nb">3</span></button>
  <div class="usr"><b>AA</b>Ahmed<i data-i="chev"></i></div>
 </div>
@@ -150,7 +151,7 @@ body.vp main{grid-template-columns:minmax(0,1fr)}body.vp .right{display:none}
    <div class="d"><em id="dh">à 08:00</em><div class="pc"><i data-i="pill"></i></div></div></div>
  </section>
 
- <section class="card"><h3><i data-i="trend"></i>Cadence &amp; Épisodes FOG au cours de la journée
+ <section class="card"><h3><i data-i="trend"></i>Cadence &amp; Épisodes FOG en direct (partagé avec l’app patient)
   <div class="lg"><span style="--c:#1f63e8">Cadence (SPM)</span><span style="--c:#ff4d6d">FOG (épisodes)</span><span class="pl"><i data-i="pill"></i>Prise de médicament</span></div></h3>
   <div class="cw"><svg id="mc" viewBox="0 0 900 272"></svg><div class="tp" id="tip"></div></div></section>
 
@@ -205,7 +206,7 @@ body.vp main{grid-template-columns:minmax(0,1fr)}body.vp .right{display:none}
  <section class="card ex"><h3><i data-i="down"></i>Exporter le rapport</h3><p>Télécharger toutes les données au format PDF</p>
   <button class="bt" id="gx"><i data-i="down"></i>Générer le rapport</button></section>
 </div>
-<footer>ParkinsonCare © 2026 &nbsp;|&nbsp; Données sécurisées et confidentielles</footer>
+<footer>NEUROSYNC © 2026 &nbsp;|&nbsp; Données sécurisées et confidentielles</footer>
 </main>
 
 <div class="ptm" id="pma" hidden><div class="ptb"><button class="x2" data-c aria-label="Fermer">✕</button>
@@ -225,6 +226,7 @@ body.vp main{grid-template-columns:minmax(0,1fr)}body.vp .right{display:none}
   <p style="margin-top:14px">Glissez sur le modèle pour le faire pivoter.</p></div></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="sync.js"></script>
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const I={home:'<path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -248,7 +250,6 @@ const day=['01/10','02/10','03/10','04/10','05/10','06/10','07/10'],fog=[9,7,6,4
 const T=[
 {t:'Prise de médicament',d:'08:00 - Levodopa/Carbidopa (100 mg)',s:'done',l:'Terminée',i:'check',mg:100,h:'08:00'},
 {t:'Prise de médicament',d:'12:00 - Entacapone (200 mg)',s:'soon',l:'À venir',w:'dans 2 h',i:'check',mg:200,h:'12:00'},
-{t:'Épisode FOG détecté',d:'14:32 - Durée : 6 s | Cadence : 84 SPM',s:'alert',l:'Aujourd’hui',i:'snow'},
 {t:'Prise de médicament',d:'18:00 - Levodopa/Carbidopa (100 mg)',s:'soon',l:'À venir',w:'dans 8 h',i:'check',mg:100,h:'18:00'}],
 X=[{t:'Rapport médecin',d:'Génération automatique - 08/10/2026',s:'soon',l:'À venir',w:'demain',i:'file'},
 {t:'Séance de marche guidée',d:'17:00 - 20 min avec repères sonores',s:'soon',l:'À venir',w:'dans 7 h',i:'steps'}];
@@ -257,7 +258,7 @@ function rt(){const L=cur();
  $('#tl').innerHTML=L.map((x,k)=>`<div class="ti ${x.s}" data-k="${k}"><div class="c"><i data-i="${x.i}"></i></div><b>${x.t}</b><span class="st"><i data-i="${{alert:'alert',done:'check'}[x.s]||'clock'}"></i>${x.l}</span><small>${x.d}</small><span class="w">${x.w||''}</span></div>`).join('');
  const n=L.filter(x=>x.s=='soon'||x.s=='alert').length;$$('.nb').forEach(e=>{e.textContent=n;e.style.display=n?'grid':'none'});icons()}
 $('#tl').onclick=e=>{const r=e.target.closest('.ti');if(!r)return;const x=cur()[+r.dataset.k];
- if(x.s=='soon'){x.s='done';x.l='Terminée';x.w='';toast(x.t+' validée : '+x.d);if(x.mg){$('#dm').textContent=x.mg;$('#dh').textContent='à '+x.h}}
+ if(x.s=='soon'){x.s='done';x.l='Terminée';x.w='';toast(x.t+' validée : '+x.d);if(x.mg){$('#dm').textContent=x.mg;$('#dh').textContent='à '+x.h;NS.post('/api/meds/log',{drug:x.d.split(' - ')[1],mg:x.mg})}}
  else if(x.s=='alert'){x.s='seen';x.l='Vu';toast('Épisode FOG marqué comme vu')}rt()};
 $('#va').onclick=()=>{all=!all;$('#va span').textContent=all?'Réduire':'Voir tout';rt()};
 $('#bl').onclick=()=>{const k=$('.tk');k.scrollIntoView({behavior:'smooth',block:'center'});k.classList.add('fl');setTimeout(()=>k.classList.remove('fl'),1500);toast('Vous avez '+$('.th .nb').textContent+' tâche(s) ou alerte(s) en attente')};
@@ -265,29 +266,13 @@ $('#bl').onclick=()=>{const k=$('.tk');k.scrollIntoView({behavior:'smooth',block
 /* ===== Tableau FOG ===== */
 const F=[['01/10/2026','09:24','8 s',72],['01/10/2026','11:47','12 s',68],['02/10/2026','14:32','6 s',84],['03/10/2026','16:18','10 s',76],['05/10/2026','10:03','7 s',80]],
 F2=[['06/10/2026','08:41','9 s',70],['06/10/2026','15:09','5 s',78],['07/10/2026','14:32','6 s',84]];let fa=0;
-const rf=()=>{$('#fb').innerHTML=(fa?F.concat(F2):F).map(r=>`<tr><td><div class="df"><span class="dot"><i data-i="snow"></i></span>${r[0]}</div></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>100</td></tr>`).join('');icons()};
+const rf=()=>{const L=window.EPS||[];$('#fb').innerHTML=(fa?L:L.slice(0,5)).map(e=>`<tr><td><div class="df"><span class="dot"><i data-i="snow"></i></span>${NS.date(e.at)}</div></td><td>${NS.time(e.at)}</td><td>${e.duration} s</td><td>${e.cadence}</td><td>${(window.DOSE||{mg:100}).mg}</td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--mu)">En attente du bracelet…</td></tr>';icons()};
 $('#vf').onclick=()=>{fa=!fa;$('#vf span').textContent=fa?'Réduire':'Voir tout';rf()};
 
 /* ===== Mini-courbes des KPI ===== */
 $$('.sk').forEach(e=>{const d=e.dataset.s.split(',').map(Number),c=e.dataset.c,a=Math.min(...d),z=Math.max(...d),
  p=d.map((v,i)=>(i?'L':'M')+(i*140/(d.length-1)).toFixed(1)+' '+(30-(v-a)/(z-a)*28).toFixed(1)).join('');
  e.innerHTML=`<svg viewBox="0 0 140 32" preserveAspectRatio="none"><path d="${p}L140 32L0 32Z" fill="${c}" opacity=".12"/><path d="${p}" fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`});
-
-/* ===== Graphique principal : cadence + FOG + prises ===== */
-(()=>{const W=900,l=48,r=852,t=14,b=222,x=h=>l+(h-8)/14*(r-l),yl=v=>b-(v-60)/80*(b-t),yr=v=>b-v/4*(b-t),
-cd=[...Array(57)].map((_,i)=>Math.max(62,Math.min(134,100+9*Math.sin(i/2.4)+6*Math.sin(i*1.35)-34*Math.exp(-((i-22)**2)/3)-14*Math.exp(-((i-38)**2)/4)))),
-ev=[[8.6,1],[10.4,1],[12.2,1],[14.5,2],[16.2,1],[18.4,1]],ds=[8,12,18];let s='';
-[60,80,100,120,140].forEach(v=>s+=`<line class="g" x1="${l}" x2="${r}" y1="${yl(v)}" y2="${yl(v)}"/><text class="b1" x="${l-8}" y="${yl(v)+4}" text-anchor="end">${v}</text>`);
-[0,1,2,3,4].forEach(v=>s+=`<text class="b2" x="${r+8}" y="${yr(v)+4}">${v}</text>`);
-for(let h=8;h<=20;h+=2)s+=`<text x="${x(h)}" y="${b+42}" text-anchor="middle">${fmt(h)}</text>`;
-s+=`<text class="b1" transform="translate(11 ${(t+b)/2}) rotate(-90)" text-anchor="middle">Cadence (SPM)</text><text class="b2" transform="translate(${W-6} ${(t+b)/2}) rotate(90)" text-anchor="middle">Nombre d’épisodes FOG</text>`;
-const p=cd.map((v,i)=>(i?'L':'M')+x(8+i/4).toFixed(1)+' '+yl(v).toFixed(1)).join('');
-s+=`<path d="${p}L${r} ${b}L${l} ${b}Z" fill="url(#gb)"/><path class="ln" d="${p}"/>`;
-ev.forEach(([h,n])=>s+=`<rect class="bar" x="${x(h)-5}" y="${yr(n)}" width="10" height="${b-yr(n)}" rx="3" fill="url(#gp)"><title>${fmt(h)} : ${n} épisode(s) FOG</title></rect>`);
-ds.forEach(h=>s+=`<line x1="${x(h)}" x2="${x(h)}" y1="${t}" y2="${b+4}" stroke="#17a673" stroke-dasharray="3 4" opacity=".4"/><g transform="translate(${x(h)} ${b+22}) rotate(-40)"><rect x="-8" y="-4" width="16" height="8" rx="4" fill="#fff" stroke="#17a673" stroke-width="1.8"/><path d="M0-4v8" stroke="#17a673" stroke-width="1.8"/><title>Prise de médicament à ${fmt(h)}</title></g>`);
-const sv=$('#mc'),tp=$('#tip');sv.innerHTML=s;
-sv.onmousemove=e=>{const bb=sv.getBoundingClientRect(),k=Math.round(((e.clientX-bb.left)/bb.width*W-l)/(r-l)*56);if(k<0||k>56)return tp.style.display='none';
- tp.style.cssText=`display:block;left:${e.clientX-bb.left}px;top:${e.clientY-bb.top-34}px`;tp.textContent=fmt(8+k/4)+' · '+Math.round(cd[k])+' SPM'};sv.onmouseleave=()=>tp.style.display='none'})();
 
 /* ===== Épisodes FOG par jour ===== */
 (()=>{const l=30,r=410,t=16,b=140,bw=(r-l)/7,y=v=>b-v/10*(b-t);let s='';
@@ -361,13 +346,13 @@ $('#hx').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjec
 function rtr(){const L=T.filter(x=>x.mg),d=L.filter(x=>x.s=='done').length;
  $('#tb').innerHTML=L.map(x=>`<tr><td>${x.h}</td><td>${x.d.split(' - ')[1]}</td><td><span class="chip ${x.s}">${x.l}</span></td><td>${x.s=='soon'?`<button class="bt sm" data-h="${x.h}">Marquer prise</button>`:''}</td></tr>`).join('');
  $('#ob').textContent=`Observance du jour : ${d}/${L.length} prises`;$('#obb').style.width=Math.round(d/L.length*100)+'%'}
-$('#tb').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=T.find(t=>t.mg&&t.h==b.dataset.h);x.s='done';x.l='Terminée';x.w='';$('#dm').textContent=x.mg;$('#dh').textContent='à '+x.h;toast(x.t+' validée : '+x.d);rt();rtr()};
+$('#tb').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=T.find(t=>t.mg&&t.h==b.dataset.h);x.s='done';x.l='Terminée';x.w='';$('#dm').textContent=x.mg;$('#dh').textContent='à '+x.h;NS.post('/api/meds/log',{drug:x.d.split(' - ')[1],mg:x.mg});toast(x.t+' validée : '+x.d);rt();rtr()};
 $('#ta').onclick=()=>{const n=$('#tn').value.trim(),g=+$('#tg').value,h=$('#tt').value;if(!n||!g||!h)return toast('Renseignez le médicament, la dose et l’heure');
  T.push({t:'Prise de médicament',d:`${h} - ${n} (${g} mg)`,s:'soon',l:'À venir',w:'planifiée',i:'check',mg:g,h});T.sort((a,b)=>a.d.slice(0,5)<b.d.slice(0,5)?-1:1);
  $('#tn').value=$('#tg').value='';toast('Prise ajoutée à '+h+' : visible dans Tâches & Alertes');rt();rtr()};
 
 /* Rapport médecin : calculé à partir des données */
-const PF={nom:'Ahmed Ben Ali',id:'PK-00123',naiss:'14/03/1958',sexe:'Homme',diag:'Maladie de Parkinson - stade 2,5',med:'Dr Salma Trabelsi',tel:'+216 20 123 456',urg:'Fatma Ben Ali - +216 98 765 432',all:'Aucune connue'},
+const PF={nom:'Ahmed Ben Ali',id:'PK-00123',naiss:'14/03/1958',sexe:'Homme',diag:'Maladie de Parkinson - stade 2,5',med:'Dr. Ahmed Ben Salah',tel:'+216 20 123 456',urg:'Fatma Ben Ali - +216 98 765 432',all:'Aucune connue'},
 PL={nom:'Nom complet',id:'Identifiant patient',naiss:'Date de naissance',sexe:'Sexe',diag:'Diagnostic',med:'Médecin référent',tel:'Téléphone',urg:'Contact d’urgence',all:'Allergies'};let pe=0;
 function rr(){const sm=a=>a.reduce((x,y)=>x+y,0),tf=sm(fog),ca=Math.round(sm(cad)/7),d=T.filter(x=>x.mg),ob=d.filter(x=>x.s=='done').length,
  K=[['Épisodes FOG (7 jours)',tf],['Moyenne par jour',(tf/7).toFixed(1)],['Cadence moyenne',ca+' SPM'],['Cadence 01/10 → 07/10',cad[0]+' → '+cad[6]+' SPM'],['FOG par jour 01/10 → 07/10',fog[0]+' → '+fog[6]],['Observance du jour',ob+'/'+d.length+' prises']];
@@ -379,7 +364,7 @@ $('#rpc').onclick=()=>{rr();(navigator.clipboard?navigator.clipboard.writeText(r
 /* Profil patient : modifiable, met à jour l’en-tête */
 function rp(){$('#pf').innerHTML=Object.keys(PL).map(k=>`<label>${PL[k]}<input data-k="${k}" value="${esc(PF[k])}" ${pe?'':'disabled'}></label>`).join('');$('#pn').textContent=PF.nom;$('#pi').textContent='Patient ID : '+PF.id;$('#pe').textContent=pe?'Enregistrer':'Modifier';
  $('#og').innerHTML=[['Cadence cible ≥ 100 SPM',96,100,'SPM'],['Pas par jour ≥ 6 000',4826,6000,''],['Épisodes FOG ≤ 5 par jour',7,5,'']].map((g,i)=>`<div style="margin-bottom:12px"><div class="df" style="justify-content:space-between"><b>${g[0]}</b><span>actuel : ${g[1].toLocaleString('fr-FR')} ${g[3]}</span></div><div class="pb"><i style="width:${Math.min(100,Math.round((i<2?g[1]/g[2]:g[2]/g[1])*100))}%"></i></div></div>`).join('')}
-$('#pe').onclick=()=>{if(pe){$$('#pf input').forEach(i=>PF[i.dataset.k]=i.value.trim()||PF[i.dataset.k]);$('.top h1').textContent=PF.nom;$('.top p').textContent=`Patient ID : ${PF.id}\u00a0|\u00a0Suivi depuis le 01/10/2026`;
+$('#pe').onclick=()=>{if(pe){$$('#pf input').forEach(i=>PF[i.dataset.k]=i.value.trim()||PF[i.dataset.k]);$('.top h1').textContent=PF.nom;$('.top p').textContent=`Patient ID : ${PF.id}\u00a0|\u00a0Suivi depuis le 08/10/2026`;
  $('.usr b').textContent=PF.nom.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();$('.usr').childNodes[1].textContent=PF.nom.split(' ')[0];toast('Profil mis à jour')}pe=!pe;rp()};
 rp();
 
@@ -433,97 +418,26 @@ rt();rf();icons();mk($('#cvs'),{s:.7});mk($('#cv3'),{ring:1,s:.9});
 setTimeout(()=>$('.pb i').style.width='86%',300);
 setTimeout(()=>toast('Rappel : prochaine prise à 12:00 – Entacapone (200 mg)'),1500);
 </script>
-</body></html>
 <script>
-// --- NeuroSync Real-Time Doctor Synchronization ---
-let lastKnownState = "NORMAL";
-let lastEpisodeTime = null;
-
-async function syncDoctorDashboard() {
-  try {
-    const res = await fetch('/api/live');
-    if (!res.ok) return;
-    const data = await res.json();
-
-    // 1. Live Cadence KPI (Targeting 4th KPI card)
-    const cadenceCard = document.querySelectorAll('.kp .k')[3];
-    if (cadenceCard) {
-      const cadVal = cadenceCard.querySelector('b .n');
-      if (cadVal) cadVal.textContent = data.cadence_spm;
-    }
-
-    // 2. FOG Count KPI (Targeting 2nd KPI card)
-    const fogCard = document.querySelectorAll('.kp .k')[1];
-    if (fogCard && data.episodes) {
-      const fogVal = fogCard.querySelector('b .n');
-      if (fogVal) fogVal.textContent = 7 + data.episodes.length;
-    }
-
-    // 3. Populate FOG Incidents Table (#fb)
-    const fbTable = document.getElementById('fb');
-    if (fbTable && data.episodes && data.episodes.length > 0) {
-      const liveRowsHtml = data.episodes.map(ep => `
-        <tr style="background: rgba(255, 77, 109, 0.08); font-weight: 600;">
-          <td>
-            <div class="df">
-              <span class="dot" style="background: var(--pk); animation: fl 1s infinite;">
-                <i data-i="snow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/></svg></i>
-              </span>
-              Aujourd'hui
-            </div>
-          </td>
-          <td style="color: var(--pk); font-weight: 700;">${ep.time}</td>
-          <td>${ep.duration} s</td>
-          <td>${data.cadence_spm}</td>
-          <td>100</td>
-        </tr>
-      `).join('');
-
-      // Inject live episodes at the top of the table
-      fbTable.innerHTML = liveRowsHtml + fbTable.innerHTML;
-    }
-
-    // 4. Handle State Transitions (Alerte FOG active)
-    if (data.state === "FOG_DETECTED") {
-      // Flash the alert bell badge
-      const bells = document.querySelectorAll('.nb');
-      bells.forEach(b => {
-        b.textContent = parseInt(b.textContent || '3') + 1;
-        b.style.display = 'grid';
-      });
-
-      // Show real-time doctor toast alert once per episode
-      if (lastKnownState !== "FOG_DETECTED") {
-        if (typeof toast === "function") {
-          toast(`🚨 ALERTE MÉDECIN : Épisode FOG détecté chez Ahmed Ben Ali ! (FI: ${Number(data.freeze_index).toFixed(2)})`);
-        }
-
-        // Add real-time card into the right-hand tasks panel (#tl)
-        const tl = document.getElementById('tl');
-        if (tl) {
-          const alertItem = document.createElement('div');
-          alertItem.className = 'ti alert';
-          alertItem.style.borderLeft = '4px solid var(--pk)';
-          alertItem.innerHTML = `
-            <div class="c" style="background: var(--pk);"><i data-i="snow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M3.3 7l17.4 10M3.3 17"/></svg></i></div>
-            <b>Épisode FOG EN COURS</b>
-            <span class="st" style="color: var(--pk);"><i data-i="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></i>Immédiat</span>
-            <small>${new Date().toLocaleTimeString()} - FI : ${Number(data.freeze_index).toFixed(2)} | Cadence : 0 SPM</small>
-            <span class="w">En direct</span>
-          `;
-          tl.prepend(alertItem);
-        }
-      }
-    }
-
-    lastKnownState = data.state;
-
-  } catch (err) {
-    console.warn("Synchronisation du tableau de bord médecin en attente...", err);
-  }
-}
-
-// Interroger le serveur toutes les secondes pour un verrouillage parfait
-setInterval(syncDoctorDashboard, 1000);
-syncDoctorDashboard();
+/* ===== Données partagées avec l’application patient (flux /api/sync) ===== */
+window.EPS=[];const seen=new Set();let firstSync=1;
+function drawMain(d){const H=d.history;if(H.length<2)return;const W=900,l=48,r=852,t=14,b=222,t0=H[0].t,t1=H[H.length-1].t,x=v=>l+(v-t0)/(t1-t0||1)*(r-l),yl=v=>b-Math.min(v,160)/160*(b-t),yr=v=>b-Math.min(v,4)/4*(b-t);let s='';
+ [0,40,80,120,160].forEach(v=>s+=`<line class="g" x1="${l}" x2="${r}" y1="${yl(v)}" y2="${yl(v)}"/><text class="b1" x="${l-8}" y="${yl(v)+4}" text-anchor="end">${v}</text>`);
+ [0,1,2,3,4].forEach(v=>s+=`<text class="b2" x="${r+8}" y="${yr(v)+4}">${v}</text>`);
+ [0,.25,.5,.75,1].forEach(k=>s+=`<text x="${l+k*(r-l)}" y="${b+42}" text-anchor="middle">${NS.time(t0+k*(t1-t0))}</text>`);
+ s+=`<text class="b1" transform="translate(11 ${(t+b)/2}) rotate(-90)" text-anchor="middle">Cadence (SPM)</text><text class="b2" transform="translate(${W-6} ${(t+b)/2}) rotate(90)" text-anchor="middle">Nombre d’épisodes FOG</text>`;
+ const p=H.map((h,i)=>(i?'L':'M')+x(h.t).toFixed(1)+' '+yl(h.cad).toFixed(1)).join('');
+ s+=`<path d="${p}L${r} ${b}L${l} ${b}Z" fill="url(#gb)"/><path class="ln" d="${p}"/>`;
+ d.episodes.filter(e=>e.at>=t0).forEach(e=>s+=`<rect class="bar" x="${x(e.at)-5}" y="${yr(1)}" width="10" height="${b-yr(1)}" rx="3" fill="url(#gp)"><title>${NS.time(e.at)} : FOG ${e.duration} s, FI ${e.peak_fi}</title></rect>`);
+ d.doses.filter(z=>z.at>=t0).forEach(z=>s+=`<g><line x1="${x(z.at)}" x2="${x(z.at)}" y1="${t}" y2="${b+4}" stroke="#17a673" stroke-dasharray="3 4" opacity=".6"/><title>Prise ${NS.time(z.at)} : ${z.drug}</title></g>`);
+ $('#mc').innerHTML=s}
+{const o=$('#pe').onclick;$('#pe').onclick=()=>{const w=pe;o();if(w)NS.post('/api/patient',{name:PF.nom,id:PF.id})}}
+NS.on(d=>{const p=d.patient,E=window.EPS=d.episodes,D=d.doses,Hh=d.history,L=D[D.length-1],K=$$('#v-dash .kp .n'),set=(i,v)=>K[i]&&(K[i].textContent=v);
+ if(!pe&&(PF.nom!=p.name||PF.id!=p.id)){PF.nom=p.name;PF.id=p.id;$('.top h1').textContent=p.name;$('.top p').innerHTML='Patient ID : '+esc(p.id)+' &nbsp;|&nbsp; Suivi depuis le 08/10/2026';$('.usr b').textContent=ini(p.name);$('.usr').childNodes[1].textContent=p.name.split(' ')[0];rp()}
+ const cs=Hh.filter(h=>h.cad>0);set(1,E.length);set(2,E.reduce((a,e)=>a+e.duration,0));if(cs.length)set(3,Math.round(cs.reduce((a,h)=>a+h.cad,0)/cs.length));
+ if(L){window.DOSE=L;set(4,L.mg);$('#dh').textContent='à '+NS.time(L.at).slice(0,5)}
+ let add=0;E.forEach(e=>{if(seen.has(e.at))return;seen.add(e.at);if(!firstSync){add=1;T.unshift({t:'Épisode FOG détecté',d:NS.time(e.at)+' - Durée : '+e.duration+' s | Cadence : '+e.cadence+' SPM',s:'alert',l:'En direct',i:'snow'});toast('Épisode FOG détecté chez '+p.name+' (FI '+e.peak_fi+')')}});
+ firstSync=0;if(add)rt();rf();drawMain(d);
+ H.length=0;E.forEach(e=>H.push({d:NS.date(e.at),h:NS.time(e.at),t:'FOG',x:'Durée '+e.duration+' s · Cadence '+e.cadence+' SPM · FI '+e.peak_fi}));D.forEach(z=>H.push({d:NS.date(z.at),h:NS.time(z.at),t:'Médicament',x:z.drug+' ('+z.mg+' mg)'}));H.sort((a,b)=>ky(a)<ky(b)?1:-1);if(!$('#v-hist').hidden)rh()});
 </script>
+</body></html>

@@ -3,6 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f131d"><title>NeuroSync WalkAssist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
 <style>
@@ -84,12 +85,12 @@ body.frozen #top{box-shadow:0 8px 40px rgba(244,63,94,.2)}
 .rg{position:relative;width:76px;height:76px}.rg svg{width:100%;height:100%;transform:rotate(-90deg)}.rg b{position:absolute;inset:0;display:grid;place-items:center;font:700 14px var(--mono);color:var(--rose)}
 .av{width:60px;height:60px;border-radius:50%;object-fit:cover;background:var(--s3);flex:none}
 #toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(84px + env(safe-area-inset-top,0px));z-index:50;background:var(--s3);border:1px solid var(--pc);padding:12px 18px;border-radius:14px;font-weight:600;display:none;max-width:calc(100% - 24px)}#toast.on{display:block}
+.lnk{min-height:44px;padding:0 16px;border-radius:99px;background:var(--s2);border:1px solid rgba(255,255,255,.12);color:var(--tx);font:600 14px Inter;display:flex;align-items:center;text-decoration:none}.lnk:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <header id="top"><div class="bar">
  <div class="brand"><div class="logo"><span class="ms">monitoring</span></div><div><b>NEUROSYNC</b><span id="scr">Gait HUD</span></div></div>
- <button id="demo"><span class="ms f">bolt</span>Demo Freeze</button><div class="avatar"><span class="ms f">person</span></div>
- <div class="chips"><div class="chip"><span class="ms" style="font-size:15px;color:var(--pc)">bolt</span>96% | Vitalis Active</div><div class="chip"><span class="dot"></span>100 Hz IMU</div><div class="chip"><span class="dot" style="background:var(--sec);box-shadow:none"></span>PT-1042 <span id="live">Live</span></div></div></div>
+ <div class="chips"><div class="chip"><span class="ms" style="font-size:15px;color:var(--pc)">bolt</span>96% | Vitalis Active</div><div class="chip"><span class="dot"></span>100 Hz IMU</div><div class="chip"><span class="dot" style="background:var(--sec);box-shadow:none"></span><span id="who">Ahmed Ben Ali</span> <span id="pcode">PK-00123</span> <span id="live">Live</span></div></div></div>
 <div id="alertbar" role="alert"><span id="abt"></span><span style="display:flex;gap:8px"><button class="badge" id="ans" hidden style="min-height:40px;background:var(--s3);color:var(--tx)">They answered</button><button class="badge" id="sd" style="min-height:40px;background:var(--pc);color:#00201c">I am safe</button></span></div></header>
 <div id="toast" role="status"></div>
 <main>
@@ -144,15 +145,15 @@ body.frozen #top{box-shadow:0 8px 40px rgba(244,63,94,.2)}
 <section id="s3">
  <div class="wide" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
   <div class="card"><span class="k m">24h Freezes</span><div class="big" id="hz">4</div><div class="k" style="color:var(--ter);margin-top:8px">↓ -2 vs yesterday</div></div>
-  <div class="card"><span class="k m">Avg Duration</span><div class="big">5.8<small class="mu">s</small></div><div class="k" style="color:var(--ter);margin-top:8px">1.4s faster break</div></div>
+  <div class="card"><span class="k m">Avg Duration</span><div class="big" id="avd">5.8<small class="mu">s</small></div><div class="k" style="color:var(--ter);margin-top:8px">1.4s faster break</div></div>
   <div class="card"><span class="k m">Cue Latency</span><div class="big">310<small class="mu">ms</small></div><div class="k" style="color:var(--ter);margin-top:8px">Cuff auto-fire</div></div>
   <div class="card"><span class="k m">IMU Fidelity</span><div class="big">99.6<small class="mu">%</small></div><div class="k" style="color:var(--ter);margin-top:8px">100Hz Shank IMU</div></div></div>
- <div class="card wide"><div class="row"><div><span class="k">Rolling 24h trace</span><h3>Freeze Index (FI) &amp; Dosing</h3></div><span class="badge g">Synchronized</span></div>
-  <div class="inset" style="margin-top:12px"><div class="mu" style="font:500 12px var(--mono);display:flex;flex-wrap:wrap;gap:6px 16px"><span style="color:var(--rose)">--- Arrest (≥ 2.0)</span><span style="color:#7dd3fc">--- Prodrome (≥ 1.2)</span><span style="color:var(--sec)">● Levodopa</span></div><svg id="ch" viewBox="0 0 400 220" width="100%" style="display:block"></svg></div>
+ <div class="card wide"><div class="row"><div><span class="k">Live trace, shared with doctor portal</span><h3>Freeze Index (FI) &amp; Dosing</h3></div><span class="badge g">Synchronized</span></div>
+  <div class="inset" style="margin-top:12px"><div class="mu" style="font:500 12px var(--mono);display:flex;flex-wrap:wrap;gap:6px 16px"><span style="color:var(--rose)">--- Arrest (≥ 2.0)</span><span style="color:#7dd3fc">--- Prodrome (≥ 1.2)</span><span style="color:var(--sec)">● Levodopa</span><span style="color:var(--rose)">● Freeze</span></div><svg id="ch" viewBox="0 0 400 220" width="100%" style="display:block"></svg></div>
   <div class="inset" style="margin-top:12px;display:flex;gap:12px;align-items:center;border:1px solid rgba(255,180,171,.15)"><span class="ms" style="color:var(--er)">medical_information</span><div><div class="k r" style="font-size:10px">Wearing-off vulnerability detected</div><b>3 of 4 freeze episodes</b> <span class="mu">manifested within 35 minutes prior to scheduled Levodopa administration windows.</span></div></div></div>
  <div class="wide"><div class="row" style="flex-wrap:wrap"><h3>Telemetry Feed</h3><div class="seg" id="flt"><button class="on" data-f="all">All (4)</button><button data-f="sev">Severe (2)</button><button data-f="pre">Pre-Dose (3)</button></div></div><div id="log"></div>
   <button class="btn p" id="exp" style="margin-top:16px;min-height:72px;justify-content:space-between"><span style="display:flex;gap:12px;align-items:center;text-align:left"><span class="ms">upload_file</span><span><b>Export Neurologist Telemetry</b><br><small style="font:500 11px var(--mono)">HL7 / FHIR • 256-BIT ENCRYPTED</small></span></span><span class="badge" style="background:rgba(0,55,49,.25);color:#00201c">EHR Sync</span></button>
-  <p class="mu" style="text-align:center;margin-top:10px;font:500 12px var(--mono)">Encrypted clinical packet prepared for Dr. H. Vance (Neurology / Movement Disorders)</p></div>
+  <p class="mu" style="text-align:center;margin-top:10px;font:500 12px var(--mono)">Encrypted clinical packet prepared for Dr. Ahmed Ben Salah (Neurology / Movement Disorders)</p></div>
 </section>
 <section id="s4">
  <div class="card wide"><div class="row"><span class="badge g">Failover Armed</span><span class="k m">Tier-3 Active</span></div><h2 style="margin-top:12px">Care Circle &amp; Dispatch</h2><p class="mu">Continuous gait sensors sync with your trusted circle. Critical freezes or fall incidents trigger immediate caregiver escalation with medical failover.</p><div class="k" style="margin-top:10px;font-size:10px">LTE Relay: 99.8% · GPS Lock: Accurate ±1.4m</div></div>
@@ -173,6 +174,7 @@ body.frozen #top{box-shadow:0 8px 40px rgba(244,63,94,.2)}
 <button id="rec"><span class="ms f" style="font-size:28px">check_circle</span><span><b>I'm Unfrozen &amp; Walking</b><small>Tap to log recovery &amp; notify caregiver</small></span></button>
 <nav id="nav"></nav>
 <script src="escalation.js"></script>
+<script src="sync.js"></script>
 <script>
 if(document.fonts)document.fonts.load('20px "Material Symbols Outlined"','bolt').then(f=>f&&f.length&&document.body.classList.add('icons')).catch(()=>{});
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -236,7 +238,7 @@ $('#ans').onclick=()=>end('answered','Care circle answered. Alert cancelled.');
 $('#sos').onclick=async()=>{let e;try{const r=await api('/api/sos');e=r.episode;skew=r.now-Date.now();mode='server'}catch(x){e=active()?EP:Escalation.start(Date.now());Object.assign(e,{stage:'emergency',deadline:Escalation.FAR,total:0});mode='local'}EP=e;lastStage=null;epTick()};
 $('#ad').onclick=e=>{S.auto=!S.auto;e.currentTarget.classList.toggle('on',S.auto);api('/api/settings','POST',{autoEmergency:S.auto}).catch(()=>{})};
 $('#sync').onclick=()=>toast('Band synced: 100 Hz stream verified.');
-$('#exp').onclick=()=>toast('FHIR packet prepared for Dr. Vance (demo).');
+$('#exp').onclick=()=>toast('FHIR packet prepared for Dr. Ahmed Ben Salah (demo).');
 /* levodopa plasma curve */
 function plasma(){const t=S.dosed,pts=[];for(let x=0;x<=400;x+=8){const c=t?Math.exp(-Math.pow((x-120)/150,2)*.9)*.9+.08:(x<110?.35+.5*Math.sin(x/110*Math.PI/2):.85*Math.exp(-(x-110)/170)+.02);pts.push([x,120-c*100])}
  const d='M'+pts.map(p=>p.join(' ')).join(' L'),nx=t?150:230;
@@ -248,15 +250,15 @@ function bars(r){const d=r==7?[3,5,2,4,6,2,4]:[1,1,2,2,3,5,4,9,4,3,4,5,3,6,5,4,8
  $('#blbl').innerHTML=r==7?'<span>Mon</span><span>Wed</span><span>Sun</span>':'<span>00:00</span><span style="color:var(--rose)">● 07:50 (4.2s)</span><span>12:00</span><span style="color:var(--rose)">● 16:42 (2.8s)</span><span>23:59</span>';
  $('#fzsub').textContent=r==7?'26 events this week, down 22%. Most cluster before scheduled doses.':'2 Brief Events: Both safely resolved via auditory metronome pacing cue.'}
 $$('[data-r]').forEach(b=>b.onclick=()=>{$$('[data-r]').forEach(x=>x.classList.toggle('on',x===b));bars(+b.dataset.r)});bars(24);
-/* FI trace */
-(function(){const X=h=>40+h/24*350,Y=v=>190-v*50,pk=[[7.6,1.8],[12.1,2.4],[16.7,2.9],[20.25,2.3]];let p='';for(let i=0;i<=192;i++){const h=i/8;let v=.28+.06*Math.sin(h*2);pk.forEach(([c,a])=>v+=a*Math.exp(-Math.pow((h-c)/.55,2)));p+=(i?'L':'M')+X(h).toFixed(1)+' '+Y(v).toFixed(1)}
+/* FI trace: drawn from the same history the doctor chart uses */
+function drawFI(d){const H=d.history;if(H.length<2)return;const t0=H[0].t,t1=H[H.length-1].t,X=t=>40+(t-t0)/(t1-t0||1)*350,Y=v=>190-Math.min(v,3.2)*50;
  let s=`<line x1="40" x2="390" y1="${Y(2)}" y2="${Y(2)}" stroke="#fb7185" stroke-dasharray="5 5"/><line x1="40" x2="390" y1="${Y(1.2)}" y2="${Y(1.2)}" stroke="#7dd3fc" stroke-dasharray="5 5"/>`;
- [8,12.5,17,21.5].forEach(h=>s+=`<line x1="${X(h)}" x2="${X(h)}" y1="30" y2="190" stroke="#bdc2ff" stroke-dasharray="2 4" opacity=".6"/><circle cx="${X(h)}" cy="30" r="5" fill="#bdc2ff"/>`);
- s+=`<path d="${p} L${X(24)} 190 L${X(0)} 190Z" fill="rgba(87,241,219,.1)"/><path d="${p}" fill="none" stroke="#57f1db" stroke-width="3" stroke-linejoin="round"/>`;
- pk.forEach(([c,a])=>s+=`<circle cx="${X(c)}" cy="${Y(a+.3)}" r="5" fill="#fca5a5"/>`);
- s+=`<rect x="${X(16.7)-70}" y="42" width="140" height="38" rx="8" fill="#31353f"/><text x="${X(16.7)}" y="58" text-anchor="middle" fill="#dfe2f0" font-size="11" font-family="JetBrains Mono" font-weight="700">FI 2.9 (PEAK)</text><text x="${X(16.7)}" y="73" text-anchor="middle" fill="#bacac5" font-size="10" font-family="JetBrains Mono">16:42:10 (-18m)</text>`;
- ['00:00','06:00','12:00','18:00','24:00'].forEach((t,i)=>s+=`<text x="${40+i*87.5}" y="212" text-anchor="middle" fill="${i==2?'#bdc2ff':'#9fb0ab'}" font-size="11" font-family="JetBrains Mono">${t}</text>`);
- $('#ch').innerHTML=s})();
+ d.doses.filter(z=>z.at>=t0).forEach(z=>s+=`<line x1="${X(z.at)}" x2="${X(z.at)}" y1="30" y2="190" stroke="#bdc2ff" stroke-dasharray="2 4" opacity=".6"/><circle cx="${X(z.at)}" cy="30" r="5" fill="#bdc2ff"/>`);
+ const p=H.map((h,i)=>(i?'L':'M')+X(h.t).toFixed(1)+' '+Y(h.fi).toFixed(1)).join('');
+ s+=`<path d="${p}L390 190L40 190Z" fill="rgba(87,241,219,.1)"/><path d="${p}" fill="none" stroke="#57f1db" stroke-width="3" stroke-linejoin="round"/>`;
+ d.episodes.filter(e=>e.at>=t0).forEach(e=>s+=`<circle cx="${X(e.at)}" cy="${Y(e.peak_fi)}" r="5" fill="#fca5a5"/>`);
+ [0,.5,1].forEach(k=>s+=`<text x="${40+k*350}" y="212" text-anchor="${['start','middle','end'][k*2]}" fill="#9fb0ab" font-size="11" font-family="JetBrains Mono">${NS.time(t0+k*(t1-t0))}</text>`);
+ $('#ch').innerHTML=s}
 /* episode log */
 let LOG=[{t:'20:15:44',tag:'Post-Dusk',c:'i',fi:2.3,d:4.2,tr:'Nightstand Pivot (Turning Hesitation)',cue:'Dual-Band Haptic (3 Hz)',res:'Resolved within 2 gait cycles'},{t:'16:42:10',tag:'Pre-Dose -18m',c:'p',fi:2.9,d:7.4,tr:'180° Rapid Turn',cue:'Laser Line + 104 BPM Audio',res:'Cadence restored smoothly'},{t:'12:05:19',tag:'Pre-Dose -25m',c:'p',fi:2.4,d:5.1,tr:'Cognitive Dual-Task (Phone)',cue:'Left Shank Haptic Burst',res:'Stride asymmetry normalized'},{t:'07:35:02',tag:'Pre-Dose -25m',c:'p',fi:1.8,d:3.2,tr:'Doorway Threshold Narrowing',cue:'Bilateral Rhythmic Cue',res:'Prompt threshold crossing'}];
 let flt='all';
@@ -264,14 +266,23 @@ function renderLog(){const L=LOG.filter(l=>flt=='all'||(flt=='sev'&&l.fi>=2.4)||
  $('#log').innerHTML=L.map(l=>`<div class="inc"><div class="row" style="flex-wrap:wrap"><b style="font:600 17px var(--mono)"><span style="color:${l.c=='p'?'#fca5a5':'#bdc2ff'}">●</span> ${l.t}</b><span class="badge ${l.c=='p'?'r':'i'}">${l.tag}</span><span class="mu" style="font:500 12px var(--mono)">FI Peak: <span style="color:var(--rose)">${l.fi}</span> <span style="background:var(--s3);padding:3px 8px;border-radius:8px;color:var(--tx)">${l.d}s</span></span></div><div class="tr"><div><span>Trigger</span><b>${l.tr}</b></div><div><span>Autonomous Cue</span><b>${l.cue}</b></div></div><span class="badge g">✓ ${l.res}</span></div>`).join('')}
 $$('#flt button').forEach(b=>b.onclick=()=>{flt=b.dataset.f;$$('#flt button').forEach(x=>x.classList.toggle('on',x===b));renderLog()});renderLog();
 /* render + server polling with offline fallback */
-function render(){const f=S.frozen;document.body.classList.toggle('frozen',f);$('#cad').textContent=Math.round(S.cad);$('#fi').textContent=S.fi.toFixed(2);
+function render(){const f=S.frozen||S.band;document.body.classList.toggle('frozen',f);$('#cad').textContent=Math.round(S.cad);$('#fi').textContent=S.fi.toFixed(2);
  $('#ring').style.strokeDashoffset=540-540*Math.min(S.cad/140,1)*.75;$('#ring').setAttribute('stroke',f?'#ffb4ab':'#57f1db');$('#dk').textContent=f?'⚠ Freezing Motor Arrest':'Nominal Locomotion';$('#sym').textContent=f?'Interrupted':'98.2%';$('#hz').textContent=S.fz}
 async function poll(){let ok=false;try{const d=await api('/api/dashboard/PT-1042','GET');ok=true;skew=d.now-Date.now();
- if(!S.frozen){S.cad=d.cadence;S.fi=d.fi}S.fz=d.freezes_24h;const e=d.episode,live=e&&e.stage!=='resolved';
+ if(!S.frozen){S.cad=d.cadence;S.fi=d.fi}S.fz=d.freezes_24h;S.band=d.status==='freeze';const e=d.episode,live=e&&e.stage!=='resolved';
  if(live&&!S.frozen&&Date.now()>(S.ignore||0))freeze(e);
  else if(live&&S.frozen&&mode==='server'&&EP&&e.t0===EP.t0)EP=e;
  else if(!live&&S.frozen&&mode==='server'&&e&&EP&&e.t0===EP.t0&&e.stage==='resolved')end('dismiss','Alert resolved elsewhere.')}catch(x){}
  if(!ok&&!S.frozen){S.cad=104+Math.round((Math.random()-.5)*4);S.fi=+(0.65+(Math.random()-.5)*.1).toFixed(2)}
- $('#live').textContent=ok?'Live':'Sim';render();setTimeout(poll,EP?1000:2500)}
+ $('#live').textContent=ok?'Live':'Sim';render();setTimeout(poll,1000)}
 poll();
+/* shared data: the same /api/sync feed as the doctor portal */
+NS.on(d=>{const p=d.patient,E=d.episodes,D=d.doses,pre=e=>D.some(x=>x.at>e.at&&x.at-e.at<2.1e6),L=D[D.length-1];
+ $('#who').textContent=p.name;$('#pcode').textContent=p.id;
+ $('#say').textContent=$('#say').textContent.replace(/Stand tall, [^.]+\./,'Stand tall, '+p.name.split(' ')[0]+'.');
+ LOG=E.map(e=>({t:NS.time(e.at),tag:NS.date(e.at)+(pre(e)?' Pre-Dose':''),c:pre(e)?'p':'i',fi:e.peak_fi,d:e.duration,tr:e.context,cue:'Laser Line + Metronome Pacer',res:'Cadence '+e.cadence+' SPM'}));renderLog();
+ [['all','All',E],['sev','Severe',E.filter(e=>e.peak_fi>=2.4)],['pre','Pre-Dose',E.filter(pre)]].forEach(([f,n,a])=>$('#flt [data-f="'+f+'"]').textContent=n+' ('+a.length+')');
+ if(E.length)$('#avd').firstChild.nodeValue=(E.reduce((a,e)=>a+e.duration,0)/E.length).toFixed(1);
+ if(L){const h=NS.time(L.at).slice(0,5);$('#dt').textContent='Last dose '+h+' ('+L.mg+' mg)';$('#dt').style.color='var(--ter)';$('#dbox').style.background='#0b2a24';$('#pl').textContent=h+' (Last Dose)'}
+ drawFI(d)});
 </script></body></html>

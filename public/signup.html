@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson-Care</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f0f4f8;
+        }
+
+        /* ── Top bar ── */
+        .top-bar {
+            background: #5e2d8e;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            letter-spacing: 0.03em;
+            z-index: 10;
+        }
+        .top-bar a { color: #b3d9ff; text-decoration: none; }
+
+        /* ── Layout ── */
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* ── LEFT PANEL ── */
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(160deg, #0d47a1 0%, #1976d2 45%, #29b6f6 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            overflow: hidden;
+        }
+
+        /* Subtle dot grid texture */
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        /* Radial glow behind caduceus */
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            width: 380px; height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.13) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /* Scattered background icons */
+        .med-icons-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .med-icon {
+            position: absolute;
+            color: rgba(255,255,255,0.13);
+            font-size: 1.4rem;
+        }
+
+        /* Brand text block */
+        .brand-block {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            color: white;
+            margin-bottom: 32px;
+        }
+        .brand-block h1 {
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            margin-bottom: 8px;
+        }
+        .brand-block p {
+            font-size: 0.88rem;
+            opacity: 0.85;
+            max-width: 280px;
+            line-height: 1.6;
+            margin: 0 auto;
+        }
+
+        /* ── CADUCEUS SVG WRAPPER ── */
+        .caduceus-wrap {
+            position: relative;
+            z-index: 3;
+            width: 220px;
+            filter:
+                drop-shadow(0 8px 32px rgba(0,0,0,0.38))
+                drop-shadow(0 2px 8px rgba(0,60,180,0.45));
+            animation: floatStaff 5s ease-in-out infinite;
+        }
+
+        @keyframes floatStaff {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50%       { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        /* tagline under staff */
+        .staff-tagline {
+            position: relative;
+            z-index: 3;
+            margin-top: 24px;
+            text-align: center;
+            color: rgba(255,255,255,0.72);
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+            width: 460px;
+            min-width: 340px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 48px;
+        }
+
+        .form-card { width: 100%; max-width: 380px; }
+
+        .form-card h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 5px;
+        }
+        .form-card .subtitle {
+            font-size: 0.87rem;
+            color: #999;
+            margin-bottom: 22px;
+        }
+        .divider-line {
+            height: 2px;
+            width: 56px;
+            background: linear-gradient(90deg, #7b2ff7, #2196F3);
+            border-radius: 2px;
+            margin-bottom: 26px;
+        }
+
+        /* Social */
+        .social-row { display: flex; gap: 11px; margin-bottom: 18px; }
+        .social-btn {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center;
+            gap: 7px;
+            padding: 9px 10px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 0.82rem; font-weight: 600; color: #444;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            text-decoration: none;
+        }
+        .social-btn:hover { border-color: #2196F3; background: #f0f8ff; }
+        .icon-google { color: #EA4335; }
+        .icon-fb    { color: #1877F2; }
+
+        .or-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 16px 0; color: #bbb; font-size: 0.8rem;
+        }
+        .or-divider::before, .or-divider::after {
+            content: ''; flex: 1; height: 1px; background: #ebebeb;
+        }
+
+        /* Fields */
+        .field-group { margin-bottom: 16px; }
+        .field-group label {
+            display: block;
+            font-size: 0.84rem; font-weight: 600; color: #7b2ff7;
+            margin-bottom: 5px;
+        }
+        .field-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e0e0e0; border-radius: 8px;
+            font-size: 0.91rem; color: #333; background: #fafafa;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .field-group input:focus {
+            border-color: #2196F3; background: #fff;
+            box-shadow: 0 0 0 3px rgba(33,150,243,0.1);
+        }
+        .field-group input::placeholder { color: #c0c0c0; }
+
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 42px; }
+        .eye-toggle {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: #bbb; font-size: 0.93rem; padding: 0;
+            transition: color 0.2s;
+        }
+        .eye-toggle:hover { color: #2196F3; }
+
+        /* Terms */
+        .terms-row {
+            display: flex; align-items: flex-start; gap: 9px;
+            margin-bottom: 20px; font-size: 0.81rem; color: #888; line-height: 1.4;
+        }
+        .terms-row input[type="checkbox"] {
+            width: 15px; height: 15px; accent-color: #7b2ff7;
+            margin-top: 2px; flex-shrink: 0; cursor: pointer;
+        }
+        .terms-row a { color: #2196F3; text-decoration: none; }
+        .terms-row a:hover { text-decoration: underline; }
+
+        /* CTA */
+        .btn-create {
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, #7b2ff7 0%, #2196F3 100%);
+            color: white; border: none; border-radius: 8px;
+            font-size: 0.96rem; font-weight: 700; letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            margin-bottom: 16px;
+        }
+        .btn-create:hover {
+            opacity: 0.91; transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(123,47,247,0.35);
+        }
+        .btn-create:active { transform: translateY(0); }
+
+        .login-link { text-align: center; font-size: 0.85rem; color: #999; }
+        .login-link a { color: #7b2ff7; font-weight: 600; text-decoration: none; }
+        .login-link a:hover { text-decoration: underline; }
+
+        /* ── Footer ── */
+        footer {
+            background: #1a1a2e; color: rgba(255,255,255,0.65);
+            text-align: center; padding: 15px 20px; font-size: 0.78rem;
+        }
+        .social-icons { display: flex; justify-content: center; gap: 15px; margin-top: 9px; }
+        .social-icons a {
+            color: rgba(255,255,255,0.55); font-size: 1.05rem;
+            transition: color 0.2s; text-decoration: none;
+        }
+        .social-icons a:hover { color: #42A5F5; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .page-wrapper { flex-direction: column; }
+            .left-panel { min-height: 320px; padding: 30px 20px; }
+            .caduceus-wrap { width: 160px; }
+            .right-panel { width: 100%; padding: 36px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        Parkinson-Care &nbsp;|&nbsp;
+        <a href=" forgotpassword.html ">forget your password? →</a>
+    </div>
+
+    <div class="page-wrapper">
+
+        <!-- ══════════════ LEFT PANEL ══════════════ -->
+        <div class="left-panel">
+
+            <!-- Background scattered icons -->
+            <div class="med-icons-layer">
+                <i class="fas fa-heartbeat med-icon" style="top:6%;left:8%"></i>
+                <i class="fas fa-pills med-icon"     style="top:12%;left:72%"></i>
+                <i class="fas fa-stethoscope med-icon" style="top:28%;left:88%"></i>
+                <i class="fas fa-microscope med-icon"  style="top:48%;left:4%"></i>
+                <i class="fas fa-syringe med-icon"   style="top:62%;left:80%"></i>
+                <i class="fas fa-dna med-icon"       style="top:74%;left:12%"></i>
+                <i class="fas fa-x-ray med-icon"     style="top:84%;left:62%"></i>
+                <i class="fas fa-vial med-icon"      style="top:18%;left:28%"></i>
+                <i class="fas fa-brain med-icon"     style="top:88%;left:32%"></i>
+                <i class="fas fa-hospital med-icon"  style="top:4%;left:50%"></i>
+            </div>
+
+            <!-- Brand heading -->
+            <div class="brand-block">
+                <h1>Parkinson-Care</h1>
+                <p>Your trusted platform for professional Parkinson's disease resources, and research tools.</p>
+            </div>
+
+            <!-- ════ 3D-STYLE CADUCEUS SVG ════ -->
+            <div class="caduceus-wrap">
+                <svg viewBox="0 0 220 420" xmlns="http://www.w3.org/2000/svg" aria-label="Caduceus medical symbol">
+                  <defs>
+                    <!-- Staff gradient: 3D cylinder effect -->
+                    <linearGradient id="staffGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%"   stop-color="#5c8fff"/>
+                      <stop offset="30%"  stop-color="#e8f0ff"/>
+                      <stop offset="55%"  stop-color="#ffffff"/>
+                      <stop offset="75%"  stop-color="#c5d8ff"/>
+                      <stop offset="100%" stop-color="#2255cc"/>
+                    </linearGradient>
+                    <!-- Snake body gradient -->
+                    <linearGradient id="snakeGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%"   stop-color="#d0e8ff"/>
+                      <stop offset="40%"  stop-color="#b0ceff"/>
+                      <stop offset="100%" stop-color="#3a6ee0"/>
+                    </linearGradient>
+                    <linearGradient id="snakeGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%"   stop-color="#cce0ff"/>
+                      <stop offset="40%"  stop-color="#a8c8ff"/>
+                      <stop offset="100%" stop-color="#2a5cd0"/>
+                    </linearGradient>
+                    <!-- Wing gradient -->
+                    <linearGradient id="wingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%"   stop-color="#e8f2ff"/>
+                      <stop offset="60%"  stop-color="#8ab8ff"/>
+                      <stop offset="100%" stop-color="#2255cc"/>
+                    </linearGradient>
+                    <!-- Orb gradient: sphere illusion -->
+                    <radialGradient id="orbGrad" cx="35%" cy="32%" r="60%">
+                      <stop offset="0%"   stop-color="#ffffff"/>
+                      <stop offset="40%"  stop-color="#b8d8ff"/>
+                      <stop offset="100%" stop-color="#1a4dcc"/>
+                    </radialGradient>
+                    <!-- Bottom ball -->
+                    <radialGradient id="ballGrad" cx="35%" cy="32%" r="60%">
+                      <stop offset="0%"   stop-color="#ddeeff"/>
+                      <stop offset="100%" stop-color="#1a3daa"/>
+                    </radialGradient>
+                    <!-- Scale pattern for snakes -->
+                    <pattern id="scales" x="0" y="0" width="8" height="6" patternUnits="userSpaceOnUse">
+                      <ellipse cx="4" cy="3" rx="3.5" ry="2.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.5"/>
+                    </pattern>
+                    <!-- Soft glow filter -->
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="3" result="blur"/>
+                      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                    </filter>
+                    <filter id="softShadow">
+                      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#001a66" flood-opacity="0.4"/>
+                    </filter>
+                  </defs>
+
+                  <!-- ── Drop shadow group ── -->
+                  <g filter="url(#softShadow)">
+
+                    <!-- ══ STAFF (cylinder) ══ -->
+                    <rect x="103" y="55" width="14" height="310" rx="7" ry="7"
+                          fill="url(#staffGrad)"/>
+                    <!-- Staff highlight edge -->
+                    <rect x="108" y="55" width="2.5" height="310" rx="1.2"
+                          fill="rgba(255,255,255,0.55)"/>
+
+                    <!-- ══ TOP ORB ══ -->
+                    <circle cx="110" cy="47" r="18" fill="url(#orbGrad)" stroke="#7aafff" stroke-width="1"/>
+                    <circle cx="103" cy="40" r="5" fill="rgba(255,255,255,0.55)"/>
+
+                    <!-- ══ BOTTOM BALL ══ -->
+                    <circle cx="110" cy="372" r="10" fill="url(#ballGrad)" stroke="#5588ee" stroke-width="1"/>
+
+                    <!-- ══ CROSSBAR (upper) ══ -->
+                    <rect x="93" y="118" width="34" height="6" rx="3" fill="url(#staffGrad)"/>
+                    <!-- ══ CROSSBAR (lower) ══ -->
+                    <rect x="93" y="188" width="34" height="6" rx="3" fill="url(#staffGrad)"/>
+
+                    <!-- ══ LEFT WING ══ -->
+                    <path d="M110,75
+                             C 95,72  62,58  35,40
+                             C 18,28  10,18  14,10
+                             C 22,4   38,14  55,26
+                             C 72,38  90,52  108,64
+                             Z"
+                          fill="url(#wingGrad)" opacity="0.95"/>
+                    <!-- Wing detail feathers -->
+                    <path d="M108,64 C90,50 68,34 42,18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+                    <path d="M107,70 C88,58 62,44 34,30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                    <path d="M108,68 C92,55 70,41 50,28" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+
+                    <!-- ══ RIGHT WING ══ -->
+                    <path d="M110,75
+                             C 125,72  158,58  185,40
+                             C 202,28  210,18  206,10
+                             C 198,4   182,14  165,26
+                             C 148,38  130,52  112,64
+                             Z"
+                          fill="url(#wingGrad)" opacity="0.95"/>
+                    <path d="M112,64 C130,50 152,34 178,18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+                    <path d="M113,70 C132,58 158,44 186,30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                    <path d="M112,68 C128,55 150,41 170,28" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+
+                    <!-- ══ LEFT SNAKE BODY ══ -->
+                    <!-- Snake curves left side: S-path with thickness via paired paths -->
+                    <path id="lsnake"
+                          d="M110,80
+                             C 78,90   60,110  75,130
+                             C 92,152  118,155 115,178
+                             C 112,200  80,210  82,235
+                             C 84,260  115,268 113,295
+                             C 111,318  85,328  88,355"
+                          fill="none" stroke="url(#snakeGrad1)" stroke-width="18"
+                          stroke-linecap="round"/>
+                    <!-- Scale overlay left snake -->
+                    <path d="M110,80
+                             C 78,90   60,110  75,130
+                             C 92,152  118,155 115,178
+                             C 112,200  80,210  82,235
+                             C 84,260  115,268 113,295
+                             C 111,318  85,328  88,355"
+                          fill="none" stroke="url(#scales)" stroke-width="18" opacity="0.6"
+                          stroke-linecap="round"/>
+                    <!-- Highlight on left snake -->
+                    <path d="M110,80
+                             C 78,90   60,110  75,130
+                             C 92,152  118,155 115,178
+                             C 112,200  80,210  82,235
+                             C 84,260  115,268 113,295
+                             C 111,318  85,328  88,355"
+                          fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="5"
+                          stroke-linecap="round" stroke-dasharray="6 14"/>
+
+                    <!-- ══ RIGHT SNAKE BODY ══ -->
+                    <path d="M110,80
+                             C 142,90  160,110 145,130
+                             C 128,152 102,155 105,178
+                             C 108,200 140,210 138,235
+                             C 136,260 105,268 107,295
+                             C 109,318 135,328 132,355"
+                          fill="none" stroke="url(#snakeGrad2)" stroke-width="18"
+                          stroke-linecap="round"/>
+                    <path d="M110,80
+                             C 142,90  160,110 145,130
+                             C 128,152 102,155 105,178
+                             C 108,200 140,210 138,235
+                             C 136,260 105,268 107,295
+                             C 109,318 135,328 132,355"
+                          fill="none" stroke="url(#scales)" stroke-width="18" opacity="0.6"
+                          stroke-linecap="round"/>
+                    <path d="M110,80
+                             C 142,90  160,110 145,130
+                             C 128,152 102,155 105,178
+                             C 108,200 140,210 138,235
+                             C 136,260 105,268 107,295
+                             C 109,318 135,328 132,355"
+                          fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="5"
+                          stroke-linecap="round" stroke-dasharray="6 14"/>
+
+                    <!-- ══ LEFT SNAKE HEAD ══ -->
+                    <ellipse cx="86" cy="356" rx="13" ry="9"
+                             fill="url(#snakeGrad1)" transform="rotate(-25,86,356)"/>
+                    <ellipse cx="81" cy="352" rx="3" ry="2"
+                             fill="rgba(255,255,255,0.5)" transform="rotate(-25,81,352)"/>
+                    <!-- Eye -->
+                    <circle cx="90" cy="350" r="2.5" fill="#001a66"/>
+                    <circle cx="89" cy="349" r="1" fill="rgba(255,255,255,0.8)"/>
+                    <!-- Tongue -->
+                    <path d="M80,360 L73,364 M73,364 L70,362 M73,364 L70,366"
+                          stroke="#ff6699" stroke-width="1.2" stroke-linecap="round"/>
+
+                    <!-- ══ RIGHT SNAKE HEAD ══ -->
+                    <ellipse cx="134" cy="356" rx="13" ry="9"
+                             fill="url(#snakeGrad2)" transform="rotate(25,134,356)"/>
+                    <ellipse cx="139" cy="352" rx="3" ry="2"
+                             fill="rgba(255,255,255,0.5)" transform="rotate(25,139,352)"/>
+                    <circle cx="130" cy="350" r="2.5" fill="#001a66"/>
+                    <circle cx="129" cy="349" r="1" fill="rgba(255,255,255,0.8)"/>
+                    <path d="M140,360 L147,364 M147,364 L150,362 M147,364 L150,366"
+                          stroke="#ff6699" stroke-width="1.2" stroke-linecap="round"/>
+
+                  </g><!-- end shadow group -->
+                </svg>
+            </div>
+
+            <p class="staff-tagline">Symbol of Medicine &amp; Healing</p>
+
+        </div><!-- end left panel -->
+
+        <!-- ══════════════ RIGHT PANEL ══════════════ -->
+        <div class="right-panel">
+            <div class="form-card">
+                <h2>Login</h2>
+                <p class="subtitle">Access your account to continue.</p>
+                <div class="divider-line"></div>
+
+                <div class="social-row">
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-google icon-google"></i> Sign Up with Google
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-facebook-f icon-fb"></i> Sign Up with Facebook
+                    </a>
+                </div>
+
+                <div class="or-divider">— OR —</div>
+
+                <div class="field-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" placeholder="Enter your full name" autocomplete="name">
+                </div>
+
+                <div class="field-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" autocomplete="email">
+                </div>
+
+                <div class="field-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password" autocomplete="new-password">
+                        <button class="eye-toggle" type="button" aria-label="Toggle password visibility"
+                            onclick="
+                                const inp = document.getElementById('password');
+                                const shown = inp.type === 'text';
+                                inp.type = shown ? 'password' : 'text';
+                                this.innerHTML = shown
+                                    ? '<i class=\'fas fa-eye\'></i>'
+                                    : '<i class=\'fas fa-eye-slash\'></i>';
+                            ">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="terms-row">
+                    <input type="checkbox" id="terms">
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button class="btn-create" type="button"onclick="window.location.href='../files/doctor.html'">Login
+</button>
+                <p class="login-link">
+                    create an account? <a href="signup.html">sign up</a>
+                </p>
+            </div>
+        </div>
+
+    </div><!-- end page-wrapper -->
+
+    <footer>
+        Copyright &copy; 2000–2026 Parkinson-Care. All rights reserved.
+        <div class="social-icons">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/amine.ben.chabane?igsh=MTY1NTlsamw1ZGdoYg%3D%3D" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+
+</body>
+</html>
